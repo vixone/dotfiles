@@ -1,0 +1,14 @@
+# Repo-only files — not applied to home directory
+Brewfile
+README.md
+LICENSE
+docs/
+
+# Obsidian daily notes content (machine-specific, not portable)
+obsidian-notes/daily-notes
+
+# IDE and tool artifacts — should never be tracked
+**/.DS_Store
+**/.claude
+**/.start
+**/.git
