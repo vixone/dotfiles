@@ -192,5 +192,8 @@ function y() {
   rm -f -- "$tmp"
 }
 
+# ─── Machine-specific config (not tracked by chezmoi) ────────────
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
 # Fuzzy find file and open in vim (with preview)
 vf() { local f=$(fzf --preview 'bat --color=always {} 2>/dev/null || cat {}'); [ -n "$f" ] && vim "$f"; }
