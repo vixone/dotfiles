@@ -8,7 +8,8 @@ if ! command -v brew &>/dev/null; then
 fi
 
 # 2. Install packages from Brewfile
-brew bundle --file="$(chezmoi source-path)/Brewfile"
+# Use CHEZMOI_SOURCE_DIR (injected by chezmoi) to avoid lock contention
+brew bundle --file="${CHEZMOI_SOURCE_DIR:-$(chezmoi source-path)}/Brewfile"
 
 # 3. Install Oh My Zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
