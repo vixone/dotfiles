@@ -170,12 +170,17 @@ claude() {
   return $rc
 }
 
-# cr: resume Claude session (last from this terminal, by ID, or picker)
+# cr: resume Claude session (last from this dir, by ID, or picker)
 cr() {
   if [[ -n "$1" ]]; then
     claude --resume "$1"
-  elif [[ -f "/tmp/.claude-session-$$" ]]; then
-    claude --resume "$(cat "/tmp/.claude-session-$$")"
+    return
+  fi
+  local project_dir="$HOME/.claude/projects/$(pwd | tr '/' '-')"
+  local latest
+  latest=$(ls -t "$project_dir"/*.jsonl 2>/dev/null | head -1)
+  if [[ -n "$latest" ]]; then
+    claude --resume "$(basename "$latest" .jsonl)"
   else
     claude --resume
   fi
