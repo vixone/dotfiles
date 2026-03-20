@@ -25,8 +25,8 @@ fi
 mkdir -p "$HOME/obsidian-notes/daily-notes"
 mkdir -p "$HOME/obsidian-notes/nvim"
 
-# 6. Homebrew maintenance
-brew upgrade
+# 6. Homebrew maintenance (only Brewfile packages, not everything on the machine)
+brew bundle --file="${CHEZMOI_SOURCE_DIR:-$(chezmoi source-path)}/Brewfile" --cleanup
 brew cleanup
 brew doctor || true
 
