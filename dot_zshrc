@@ -197,3 +197,13 @@ function y() {
 
 # Fuzzy find file and open in vim (with preview)
 vf() { local f=$(fzf --preview 'bat --color=always {} 2>/dev/null || cat {}'); [ -n "$f" ] && vim "$f"; }
+
+# ─── Chezmoi ─────────────────────────────────────────────────────────
+# Sync home → source state, commit, push in one shot
+# Usage: chezsync "optional commit message"
+chezsync() {
+  chezmoi re-add && \
+  chezmoi git add -- -A && \
+  chezmoi git commit -- -m "${1:-update dotfiles}" && \
+  chezmoi git push
+}
