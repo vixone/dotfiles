@@ -21,11 +21,11 @@ local function sync_theme()
   f:close()
   if mode and mode:match("light") then
     vim.o.background = "light"
+    pcall(vim.cmd.colorscheme, "catppuccin-latte")
   else
     vim.o.background = "dark"
+    pcall(vim.cmd.colorscheme, "catppuccin-mocha")
   end
-  -- Re-apply colorscheme so catppuccin picks up the background change
-  pcall(vim.cmd.colorscheme, "catppuccin")
 end
 
 -- Sync on load
