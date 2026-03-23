@@ -6,11 +6,11 @@ All unchecked tasks from your daily notes. Click the note link to jump to the or
 
 ## Todo
 
-- [ ] continue conversation about alb access logs with cristi → [[16-march]]
+- [ ] follow up with tina for iam key rotation flow → [[23-march]]
 
 ## Quick Ideas
 
 - [ ] explore linkarzu videos for more inspiration on how to use the tools better → [[09-march]]
 
 ---
-*Generated: 2026-03-19 13:56*
+*Generated: 2026-03-23 13:28*

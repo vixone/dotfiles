@@ -36,9 +36,9 @@ unset_main  = { fg = "#1e1e2e", bg = "#f2cdcd", bold = true }
 unset_alt   = { fg = "#f2cdcd", bg = "#313244"}
 
 [indicator]
-parent = { fg = "#1e1e2e", bg = "#cdd6f4" }
-current = { fg = "#1e1e2e", bg = "#cba6f7" }
-preview = { fg = "#1e1e2e", bg = "#cdd6f4" }
+parent = { fg = "#9399b2", bg = "#313244", dim = true }
+current = { fg = "#1e1e2e", bg = "#cba6f7", bold = true }
+preview = { fg = "#9399b2", bg = "#313244", dim = true }
 
 [status]
 sep_left  = { open = "", close = "" }

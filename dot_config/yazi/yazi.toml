@@ -11,6 +11,12 @@ linemode = "size"
 show_hidden = true
 show_symlink = true
 
+[plugin]
+prepend_fetchers = [
+	{ id = "git", url = "*",  run = "git" },
+	{ id = "git", url = "*/", run = "git" },
+]
+
 [preview]
 max_width = 1000
 max_height = 1000
