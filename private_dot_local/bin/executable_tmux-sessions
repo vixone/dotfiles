@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# tmux-sessions: minimal tmux session manager
+# deps: tmux, fzf | optional: tmux-resurrect (save/restore)
+
+set -euo pipefail
+
+SELF="$(realpath "$0")"
+RESURRECT_SAVE="$HOME/.tmux/plugins/tmux-resurrect/scripts/save.sh"
+RESURRECT_RESTORE="$HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh"
+LIST="tmux list-sessions -F '#{session_name}' 2>/dev/null"
+
+# --- sub-commands (invoked by fzf binds) ---
+case "${1:-}" in
+    _new)
+        printf "Session name: " >&2
+        read -r name
+        [[ -n "$name" ]] && tmux new-session -d -s "$name"
+        exit 0 ;;
+    _rename)
+        printf "New name for '%s': " "$2" >&2
+        read -r name
+        [[ -n "$name" ]] && tmux rename-session -t "$2" "$name"
+        exit 0 ;;
+    _delete)
+        tmux kill-session -t "$2" 2>/dev/null
+        exit 0 ;;
+    _save)
+        [[ -x "$RESURRECT_SAVE" ]] && "$RESURRECT_SAVE" >/dev/null 2>&1
+        tmux display-message "Sessions saved"
+        exit 0 ;;
+    _restore)
+        [[ -x "$RESURRECT_RESTORE" ]] && "$RESURRECT_RESTORE" >/dev/null 2>&1
+        tmux display-message "Sessions restored"
+        exit 0 ;;
+esac
+
+# --- main picker ---
+selected=$(eval "$LIST" | fzf \
+    --reverse \
+    --no-sort \
+    --no-scrollbar \
+    --border=rounded \
+    --prompt="session > " \
+    --header="ctrl-n=new / ctrl-r=rename / ctrl-x=delete / ctrl-l=restore" \
+    --no-preview \
+    --bind "ctrl-n:execute($SELF _new)+reload($LIST)" \
+    --bind "ctrl-r:execute($SELF _rename {})+reload($LIST)" \
+    --bind "ctrl-x:execute-silent($SELF _delete {})+reload($LIST)" \
+    --bind "ctrl-s:execute-silent($SELF _save)" \
+    --bind "ctrl-l:execute-silent($SELF _restore)+reload($LIST)" \
+) || true
+
+[[ -n "${selected:-}" ]] && tmux switch-client -t "$selected"
