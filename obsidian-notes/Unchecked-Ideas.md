@@ -6,7 +6,7 @@ All unchecked tasks from your daily notes. Click the note link to jump to the or
 
 ## Todo
 
-- [ ] follow up with tina for iam key rotation flow → [[23-march]]
+*No unchecked todos*
 
 ## Quick Ideas
 
@@ -14,4 +14,4 @@ All unchecked tasks from your daily notes. Click the note link to jump to the or
 - [ ] make skill improver skill that takes learnings from current context and improves the skill that was used for the process e.g. terraform-drift-fix  → [[24-march]]
 
 ---
-*Generated: 2026-03-24 17:40*
+*Generated: 2026-03-25 10:59*
