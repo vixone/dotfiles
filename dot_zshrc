@@ -209,4 +209,3 @@ chezsync() {
   chezmoi git commit -- -m "${1:-update dotfiles}" && \
   chezmoi git push
 }
-source ~/sandbox/rbro-cloud-pyawsops/scripts/awsops_fzf.sh

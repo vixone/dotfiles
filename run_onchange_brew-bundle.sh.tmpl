@@ -1,0 +1,9 @@
+#!/bin/bash
+# run_onchange_install-packages.sh.tmpl
+# Chezmoi re-runs this whenever the Brewfile changes.
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+set -euo pipefail
+
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
+
+echo "✅ Packages up to date"
