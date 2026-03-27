@@ -97,6 +97,25 @@ return {
   -- Disable bufferline tab bar — use <leader>b for buffer switching
   { "akinsho/bufferline.nvim", enabled = false },
 
+  -- mini.surround: add/delete/replace surrounding characters
+  -- gsa{motion}{char}  add surround   e.g. gsaiw"  → wrap word in quotes
+  -- gsd{char}          delete surround e.g. gsd"    → remove surrounding quotes
+  -- gsr{old}{new}      replace surround e.g. gsr"'  → change " to '
+  {
+    "nvim-mini/mini.surround",
+    opts = {
+      mappings = {
+        add = "gsa",            -- Add surrounding
+        delete = "gsd",         -- Delete surrounding
+        find = "gsf",           -- Find surrounding (right)
+        find_left = "gsF",      -- Find surrounding (left)
+        highlight = "gsh",      -- Highlight surrounding
+        replace = "gsr",        -- Replace surrounding
+        update_n_lines = "gsn", -- Update n_lines search range
+      },
+    },
+  },
+
   -- Lazygit
   {
     "kdheepak/lazygit.nvim",

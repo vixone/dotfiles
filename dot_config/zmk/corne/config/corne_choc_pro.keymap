@@ -206,7 +206,7 @@
         /* Left hand — middle to bottom row */
         combo_grave {
             timeout-ms = <COMBO_TERM_SLOW>;
-            key-positions = <16 30>;         // S + X
+            key-positions = <11 25>;         // O + L
             bindings = <&kp GRAVE>;
             layers = <DEF NAV MED>;
             require-prior-idle-ms = <COMBO_IDLE_SLOW>;
@@ -214,7 +214,7 @@
 
         combo_equal {
             timeout-ms = <COMBO_TERM_SLOW>;
-            key-positions = <18 32>;         // F + V
+            key-positions = <25 37>;         // L + .
             bindings = <&kp EQUAL>;
             layers = <DEF NAV MED>;
             require-prior-idle-ms = <COMBO_IDLE_SLOW>;
@@ -222,7 +222,7 @@
 
         combo_tilde {
             timeout-ms = <COMBO_TERM_SLOW>;
-            key-positions = <19 33>;         // G + B
+            key-positions = <26 38>;         // ; + /
             bindings = <&kp TILDE>;
             layers = <DEF NAV MED>;
             require-prior-idle-ms = <COMBO_IDLE_SLOW>;
@@ -278,13 +278,13 @@
             require-prior-idle-ms = <COMBO_IDLE_SLOW>;
         };
 
-        /* Backslash combo — O + P (right next to where \ used to be) */
+        /* Backslash combo — P + ; (vertical) */
         combo_bslh {
-            timeout-ms = <COMBO_TERM_FAST>;
-            key-positions = <11 12>;         // O + P → \ (shift → |)
+            timeout-ms = <COMBO_TERM_SLOW>;
+            key-positions = <12 26>;         // P + ; → \ (shift → |)
             bindings = <&kp BSLH>;
             layers = <DEF NAV MED>;
-            require-prior-idle-ms = <COMBO_IDLE_FAST>;
+            require-prior-idle-ms = <COMBO_IDLE_SLOW>;
         };
 
     };
@@ -303,13 +303,13 @@
             // ├───────┼──────┼──────┼──────┼──────┼──────┘      │   │      └──────┼──────┼──────┼──────┼──────┼──────┤
             // │CMD+TAB│  Z   │  X   │  C   │  V   │  B   │      │   │      │  N   │  M   │  ,   │  .   │  /   │SHIFT │
             // └───────┴──────┴──────┼──────┼──────┼──────┘      │   │      └──────┼──────┼──────┼──────┴──────┴──────┘
-            //                       │ GUI  │SPACE │ *NAV*│      │   │      │*MED* │ CTRL │ENTER │
+            //                       │*NAV* │ GUI  │SPACE │      │   │      │ENTER │ CTRL │*MED* │
             //                       └──────┴──────┴──────┘      │   │      └──────┴──────┴──────┘
             bindings = <
                 &kp ESC     &kp Q   &kp W   &kp E         &kp R         &kp T       &kp C_MUTE   &kp C_PP   &kp Y   &kp U         &kp I         &kp O    &kp P    &kp BSPC
                 &kp TAB     &kp A   &kp S   &hml LALT D   &hml LSHFT F  &kp G       &none        &none      &kp H   &hmr RSHFT J  &hmr RALT K   &kp L    &kp SEMI &kp SQT
                 &kp LG(TAB) &kp Z   &kp X   &kp C         &kp V         &kp B                               &kp N   &kp M         &kp COMMA     &kp DOT  &kp FSLH &kp RSHFT
-                                             &kp LGUI      &kp SPACE     &mo NAV                             &mo MED &kp ENTER     &kp RCTRL
+                                             &mo NAV       &kp LGUI      &kp SPACE                           &kp ENTER &kp RCTRL   &mo MED
             >;
             sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp PG_UP PG_DN &inc_dec_kp C_PREV C_NEXT &inc_dec_kp C_BRI_DN C_BRI_UP>;
         };

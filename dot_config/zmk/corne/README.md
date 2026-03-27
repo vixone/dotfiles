@@ -56,13 +56,28 @@ Left hand:                          Right hand:
 
 Shift + `[` = `{`, Shift + `]` = `}`, Shift + `` ` `` = `~`
 
-## Setup
+## Build & Flash
 
-1. Fork [zmk-config template](https://github.com/zmkfirmware/unified-zmk-config-template)
-2. Replace the generated `config/corne.keymap` and `config/corne.conf` with these files
-3. Update `build.yaml` with your board (nice_nano_v2, or your controller)
-4. Push — GitHub Actions builds the firmware
-5. Flash the `.uf2` files to each half
+```bash
+./build.sh          # Build both halves
+./build.sh left     # Left only
+./build.sh right    # Right only
+```
+
+### Flashing (macOS)
+
+1. Put the half in bootloader mode (double-tap reset)
+2. Find the disk:
+   ```bash
+   diskutil list | grep KEEBART
+   ```
+3. Flash (replace `disk4` with your actual disk number):
+   ```bash
+   diskutil unmountDisk /dev/disk4 && sudo dd if=firmware/corne_choc_pro_left-zmk.uf2 of=/dev/rdisk4 bs=4096
+   ```
+4. For the right half, use `corne_choc_pro_right-zmk.uf2` instead.
+
+> **Note:** Simple `cp` to `/Volumes/KEEBART/` is unreliable on macOS. Use the `dd` method above.
 
 ## Tuning
 
