@@ -287,6 +287,15 @@
             require-prior-idle-ms = <COMBO_IDLE_SLOW>;
         };
 
+        /* Tmux leader — U + H → Ctrl+P */
+        combo_tmux {
+            timeout-ms = <COMBO_TERM_SLOW>;
+            key-positions = <9 22>;          // U + H (diagonal)
+            bindings = <&kp LC(P)>;
+            layers = <DEF NAV MED>;
+            require-prior-idle-ms = <COMBO_IDLE_SLOW>;
+        };
+
         /* ZMK Studio unlock — press left + right inner bottom keys (B + N) */
         combo_studio_unlock {
             timeout-ms = <COMBO_TERM_SLOW>;
