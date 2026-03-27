@@ -68,17 +68,19 @@ with open('build.yaml') as f:
 for item in data.get('include', []):
     board = item.get('board', '')
     shield = item.get('shield', '')
+    snippet = item.get('snippet', '')
+    cmake_args = item.get('cmake-args', '')
     if '$filter' == 'all' or '$filter' in shield.lower() or '$filter' in board.lower():
-        print(f'{board},{shield}')
+        print(f'{board},{shield},{snippet},{cmake_args}')
 " 2>/dev/null || {
         # Fallback: simple parsing if python/yaml not available
         if [[ "$filter" == "all" ]]; then
-            echo "corne_choc_pro_left,nice_view_disp"
-            echo "corne_choc_pro_right,nice_view_disp"
+            echo "corne_choc_pro_left,nice_view_disp,studio-rpc-usb-uart,-DCONFIG_ZMK_STUDIO=y"
+            echo "corne_choc_pro_right,nice_view_disp,,"
         elif [[ "$filter" == *"left"* ]]; then
-            echo "corne_choc_pro_left,nice_view_disp"
+            echo "corne_choc_pro_left,nice_view_disp,studio-rpc-usb-uart,-DCONFIG_ZMK_STUDIO=y"
         elif [[ "$filter" == *"right"* ]]; then
-            echo "corne_choc_pro_right,nice_view_disp"
+            echo "corne_choc_pro_right,nice_view_disp,,"
         fi
     }
 }
@@ -151,15 +153,24 @@ fi
 mkdir -p "${FIRMWARE_DIR}"
 
 # Build each target
-echo "$TARGETS" | while IFS=, read -r board shield; do
+echo "$TARGETS" | while IFS=, read -r board shield snippet extra_cmake_args; do
     ARTIFACT_NAME="${board}"
 
-    info "Building ${board}${shield:+ with shield ${shield}}..."
+    info "Building ${board}${shield:+ with shield ${shield}}${snippet:+ (snippet: ${snippet})}..."
 
     # Build cmake args
     CMAKE_ARGS="-DZMK_CONFIG='${DOCKER_WORKSPACE}/config' -DBOARD_ROOT='${DOCKER_WORKSPACE}' -DSHIELD_ROOT='${DOCKER_WORKSPACE}'"
     if [[ -n "$shield" ]]; then
         CMAKE_ARGS="${CMAKE_ARGS} -DSHIELD='${shield}'"
+    fi
+    if [[ -n "$extra_cmake_args" ]]; then
+        CMAKE_ARGS="${CMAKE_ARGS} ${extra_cmake_args}"
+    fi
+
+    # Build snippet flag
+    SNIPPET_FLAG=""
+    if [[ -n "$snippet" ]]; then
+        SNIPPET_FLAG="-S ${snippet}"
     fi
 
     docker run --rm \
@@ -171,7 +182,7 @@ echo "$TARGETS" | while IFS=, read -r board shield; do
             set -e
             west zephyr-export 2>/dev/null
             echo '>>> Building firmware for ${board}...'
-            west build -s zmk/app -b '${board}' -d 'build/${ARTIFACT_NAME}' ${PRISTINE} -- \
+            west build -s zmk/app -b '${board}' -d 'build/${ARTIFACT_NAME}' ${PRISTINE} ${SNIPPET_FLAG} -- \
                 ${CMAKE_ARGS}
 
             if [ -f 'build/${ARTIFACT_NAME}/zephyr/zmk.uf2' ]; then

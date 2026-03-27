@@ -287,6 +287,13 @@
             require-prior-idle-ms = <COMBO_IDLE_SLOW>;
         };
 
+        /* ZMK Studio unlock — press left + right inner bottom keys (B + N) */
+        combo_studio_unlock {
+            timeout-ms = <COMBO_TERM_SLOW>;
+            key-positions = <33 34>;         // B + N
+            bindings = <&studio_unlock>;
+        };
+
     };
 
     /* ── Keymap ────────────────────────────────────────────────── */

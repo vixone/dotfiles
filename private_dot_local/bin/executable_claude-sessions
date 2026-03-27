@@ -1,0 +1,238 @@
+#!/usr/bin/env python3
+"""Fuzzy-find and resume Claude Code sessions by conversation content."""
+
+import json
+import os
+import glob
+import sys
+import subprocess
+from pathlib import Path
+
+CLAUDE_PROJECTS = Path.home() / ".claude" / "projects"
+
+
+def extract_text(msg):
+    """Extract plain text from a Claude message object."""
+    if isinstance(msg, dict) and "content" in msg:
+        content = msg["content"]
+        if isinstance(content, str):
+            return content.strip()
+        if isinstance(content, list):
+            parts = []
+            for c in content:
+                if isinstance(c, dict) and c.get("type") == "text":
+                    parts.append(c["text"])
+            return " ".join(parts).strip()
+    return ""
+
+
+def extract_sessions(project_filter=None):
+    """Scan all session JSONL files and extract metadata + searchable text."""
+    sessions = []
+
+    for jsonl in glob.glob(str(CLAUDE_PROJECTS / "*" / "*.jsonl")):
+        session_id = os.path.basename(jsonl).replace(".jsonl", "")
+        proj_dir = os.path.basename(os.path.dirname(jsonl))
+
+        slug = None
+        ts = None
+        cwd = None
+        first_msg = None
+        texts = []
+
+        try:
+            with open(jsonl) as f:
+                for line in f:
+                    try:
+                        d = json.loads(line.strip())
+                    except (json.JSONDecodeError, ValueError):
+                        continue
+
+                    if "slug" in d and not slug:
+                        slug = d["slug"]
+                    if "timestamp" in d and not ts:
+                        ts = d["timestamp"]
+                    if "cwd" in d and not cwd:
+                        cwd = d["cwd"]
+
+                    if d.get("type") == "user" and "message" in d:
+                        text = extract_text(d["message"])
+                        if text and not text.startswith("[Request interrupted"):
+                            if not first_msg:
+                                first_msg = text
+                            texts.append(text[:500])
+                    elif d.get("type") == "assistant" and "message" in d:
+                        text = extract_text(d["message"])
+                        if text:
+                            texts.append(text[:500])
+        except (OSError, IOError):
+            continue
+
+        if not first_msg:
+            continue
+
+        # Apply project filter (match on cwd)
+        if project_filter and cwd:
+            if project_filter not in cwd:
+                continue
+
+        # Clean up first message for display
+        first_display = first_msg[:120].replace("\n", " ").replace("\t", " ").strip()
+        # Strip command tags for cleaner display
+        if first_display.startswith("<command-"):
+            # Try to find actual text after tags
+            for t in texts[1:]:
+                candidate = t[:120].replace("\n", " ").replace("\t", " ").strip()
+                if not candidate.startswith("<command-") and not candidate.startswith("<"):
+                    first_display = candidate
+                    break
+
+        # Searchable = all conversation text, newlines/tabs stripped
+        searchable = " ".join(texts)[:4000].replace("\n", " ").replace("\t", " ")
+
+        sessions.append(
+            {
+                "id": session_id,
+                "proj_dir": proj_dir,
+                "slug": slug or "",
+                "ts": ts[:10] if ts else "?",
+                "cwd": cwd or "?",
+                "first_msg": first_display,
+                "searchable": searchable,
+            }
+        )
+
+    return sorted(sessions, key=lambda s: s["ts"], reverse=True)
+
+
+def preview_session(session_id, proj_dir):
+    """Format a session's conversation for the fzf preview pane."""
+    jsonl = CLAUDE_PROJECTS / proj_dir / f"{session_id}.jsonl"
+    if not jsonl.exists():
+        print(f"Session not found: {jsonl}")
+        return
+
+    cwd = None
+    slug = None
+    ts_start = None
+
+    with open(jsonl) as f:
+        for line in f:
+            try:
+                d = json.loads(line.strip())
+            except (json.JSONDecodeError, ValueError):
+                continue
+
+            if "cwd" in d and not cwd:
+                cwd = d["cwd"]
+            if "slug" in d and not slug:
+                slug = d["slug"]
+            if "timestamp" in d and not ts_start:
+                ts_start = d["timestamp"]
+
+            if d.get("type") == "user" and "message" in d:
+                text = extract_text(d.get("message", {}))
+                if text and not text.startswith("[Request interrupted"):
+                    ts = d.get("timestamp", "")[:16].replace("T", " ")
+                    print(f"\033[1;36m>>> YOU [{ts}]\033[0m")
+                    print(text[:600])
+                    print()
+
+            elif d.get("type") == "assistant" and "message" in d:
+                text = extract_text(d.get("message", {}))
+                if text:
+                    # Truncate assistant messages more aggressively
+                    print(f"\033[1;33m<<< CLAUDE\033[0m")
+                    preview_text = text[:400]
+                    if len(text) > 400:
+                        preview_text += "\n\033[2m... (truncated)\033[0m"
+                    print(preview_text)
+                    print()
+
+    # Print session metadata at the top (printed last so it scrolls to top in wrap mode)
+    # Actually fzf preview scrolls from top, so let's print header first
+    # We already printed chronologically which is what we want
+
+
+def main():
+    # Preview mode: called by fzf for the preview pane
+    if len(sys.argv) > 1 and sys.argv[1] == "--preview":
+        if len(sys.argv) >= 4:
+            preview_session(sys.argv[2], sys.argv[3])
+        return
+
+    # Parse flags
+    project_filter = None
+    if "--project" in sys.argv or "-p" in sys.argv:
+        project_filter = os.getcwd()
+
+    sessions = extract_sessions(project_filter)
+
+    if not sessions:
+        print("No sessions found.")
+        sys.exit(1)
+
+    # Build fzf input lines
+    # Format: session_id \t proj_dir \t display_line \t searchable_content
+    # fzf shows only column 3, but searches across all columns
+    lines = []
+    for s in sessions:
+        proj_short = os.path.basename(s["cwd"]) if s["cwd"] != "?" else "?"
+        display = f"[{s['ts']}] {proj_short}"
+        if s["slug"]:
+            display += f"  ({s['slug']})"
+        display += f"  --  {s['first_msg']}"
+
+        line = f"{s['id']}\t{s['proj_dir']}\t{display}\t{s['cwd']}\t{s['searchable']}"
+        lines.append(line)
+
+    fzf_input = "\n".join(lines)
+    script = os.path.abspath(__file__)
+
+    try:
+        result = subprocess.run(
+            [
+                "fzf",
+                "--delimiter",
+                "\t",
+                "--with-nth",
+                "3",
+                "--preview",
+                f'python3 "{script}" --preview {{1}} {{2}}',
+                "--preview-window",
+                "right:60%:wrap",
+                "--ansi",
+                "--no-sort",
+                "--header",
+                "Search Claude sessions | Enter=resume | Ctrl-P=toggle preview | Esc=cancel",
+                "--bind",
+                "ctrl-p:toggle-preview",
+                "--color",
+                "header:#ff79c6,info:#8be9fd,pointer:#50fa7b,prompt:#bd93f9",
+            ],
+            input=fzf_input,
+            text=True,
+            capture_output=True,
+        )
+
+        if result.returncode == 0 and result.stdout.strip():
+            selected = result.stdout.strip().split("\t")
+            session_id = selected[0]
+            session_cwd = selected[3] if len(selected) > 3 else None
+
+            # cd to the session's original directory so claude can find it
+            if session_cwd and os.path.isdir(session_cwd):
+                os.chdir(session_cwd)
+                print(f"\033[2mcd {session_cwd}\033[0m")
+
+            os.execvp("claude", ["claude", "--resume", session_id])
+        else:
+            sys.exit(0)
+
+    except FileNotFoundError:
+        print("fzf not found. Install it: brew install fzf")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

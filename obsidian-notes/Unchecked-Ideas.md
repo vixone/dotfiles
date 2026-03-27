@@ -12,6 +12,7 @@ All unchecked tasks from your daily notes. Click the note link to jump to the or
 
 - [ ] explore linkarzu videos for more inspiration on how to use the tools better → [[09-march]]
 - [ ] make skill improver skill that takes learnings from current context and improves the skill that was used for the process e.g. terraform-drift-fix  → [[24-march]]
+- [ ] explore television https://github.com/alexpasmantier/television  → [[25-march]]
 
 ---
-*Generated: 2026-03-25 10:59*
+*Generated: 2026-03-27 16:46*
