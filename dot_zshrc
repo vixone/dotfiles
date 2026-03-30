@@ -206,6 +206,6 @@ vf() { local f=$(fzf --preview 'bat --color=always {} 2>/dev/null || cat {}'); [
 chezsync() {
   chezmoi re-add && \
   chezmoi git add -- -A && \
-  chezmoi git commit -- -m "${1:-update dotfiles}" && \
+  chezmoi git commit -- -m "${1:-update dotfiles}"
   chezmoi git push
 }
