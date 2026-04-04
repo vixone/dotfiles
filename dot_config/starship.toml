@@ -1,7 +1,9 @@
 # Starship prompt config — Catppuccin Mocha palette
 # Replaces Powerlevel10k (resize-safe, no right-prompt reflow artifacts)
 
-format = """$directory$git_branch$git_status$time$character"""
+format = """$directory$git_branch$git_status$character"""
+
+right_format = """$kubernetes$time"""
 
 # Don't add blank line between prompts
 add_newline = false
@@ -43,3 +45,13 @@ disabled = false
 style = "dimmed white"
 format = "[ $time]($style) "
 time_format = "%H:%M"
+
+[kubernetes]
+disabled = false
+detect_env_vars = ["STARSHIP_KUBECTL_ACTIVE"]
+format = '[$symbol$context]($style) [/$namespace]($style) '
+style = "bold #d3869b"
+symbol = "☸ "
+contexts = [
+  { context_pattern = '^arn:aws:eks:[^:]+:[0-9]+:cluster/(?P<cluster>[[:alnum:]_.-]+)$', context_alias = '$cluster' },
+]

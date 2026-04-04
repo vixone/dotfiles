@@ -154,6 +154,10 @@ config.visual_bell = {
 }
 config.cursor_blink_rate = 0
 
+-- ─── MOUSE ────────────────────────────────────────────────────────
+-- Let CMD+click bypass tmux mouse reporting so WezTerm handles hyperlinks
+config.bypass_mouse_reporting_modifiers = "CMD"
+
 -- ─── PERFORMANCE ───────────────────────────────────────────────────
 config.front_end = "WebGpu"
 config.max_fps = 120
@@ -442,16 +446,28 @@ end)
 config.selection_word_boundary = " \t\n{}[]()\"'`"
 -- Copy selection to clipboard on mouse-up (replaces update-status polling that caused resize jitter)
 config.mouse_bindings = {
+	-- Regular click: complete selection + open link if on one
+	-- (Inside tmux, CMD+click bypasses mouse reporting but CMD is stripped,
+	-- so it arrives here as NONE. OpenLinkAtMouseCursor is a no-op on plain text.)
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = "NONE",
-		action = act.CompleteSelection("Clipboard"),
+		action = act.Multiple({
+			act.CompleteSelection("Clipboard"),
+			act.OpenLinkAtMouseCursor,
+		}),
 	},
-	-- Clickable links with cmd+click
+	-- CMD+click: open link (works outside tmux where CMD is not stripped)
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = "CMD",
 		action = act.OpenLinkAtMouseCursor,
+	},
+	-- Prevent CMD+Down from reaching the application
+	{
+		event = { Down = { streak = 1, button = "Left" } },
+		mods = "CMD",
+		action = act.Nop,
 	},
 }
 

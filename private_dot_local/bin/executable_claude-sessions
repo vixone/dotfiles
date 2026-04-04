@@ -173,8 +173,9 @@ def main():
         sys.exit(1)
 
     # Build fzf input lines
-    # Format: session_id \t proj_dir \t display_line \t searchable_content
-    # fzf shows only column 3, but searches across all columns
+    # Format: session_id \t proj_dir \t display_line \t cwd \t searchable_content
+    # fzf --with-nth=3 shows only the display column, but searches the original
+    # line (all fields) so the searchable content in field 5 is matched.
     lines = []
     for s in sessions:
         proj_short = os.path.basename(s["cwd"]) if s["cwd"] != "?" else "?"

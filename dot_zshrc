@@ -113,6 +113,25 @@ export VISUAL='nvim'
 # Starship prompt (replaces Powerlevel10k — resize-safe)
 eval "$(starship init zsh)"
 
+# Show Starship's Kubernetes module after kubectl commands, and hide it after
+# other commands or directory changes.
+autoload -Uz add-zsh-hook
+starship_kubectl_preexec() {
+  case "$1" in
+    kubectl|kubectl\ *|k|k\ *)
+      export STARSHIP_KUBECTL_ACTIVE=1
+      ;;
+    *)
+      unset STARSHIP_KUBECTL_ACTIVE
+      ;;
+  esac
+}
+starship_kubectl_chpwd() {
+  unset STARSHIP_KUBECTL_ACTIVE
+}
+add-zsh-hook preexec starship_kubectl_preexec
+add-zsh-hook chpwd starship_kubectl_chpwd
+
 # Added by LM Studio CLI (lms)
 
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
