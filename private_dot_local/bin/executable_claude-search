@@ -193,7 +193,8 @@ def rg_find_sessions(query):
         print(f"rg error: {result.stderr.strip()}", file=sys.stderr)
         sys.exit(1)
 
-    return [p for p in result.stdout.strip().split("\n") if p]
+    # Exclude subagent session files — they're ephemeral and not resumable
+    return [p for p in result.stdout.strip().split("\n") if p and "/subagents/" not in p]
 
 
 def main():
