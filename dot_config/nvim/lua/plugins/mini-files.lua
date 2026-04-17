@@ -6,7 +6,7 @@ return {
   opts = function(_, opts)
     -- Custom navigation mappings
     opts.mappings = vim.tbl_deep_extend("force", opts.mappings or {}, {
-      close = "<esc>",
+      close = "q",
       go_in = "l",
       go_in_plus = "<CR>",
       go_out = "H",

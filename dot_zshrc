@@ -81,6 +81,7 @@ alias tf="terraform"
 gitcleanup() {
   git branch --merged | grep -vE '(^\*|master|main|develop)' | xargs -n 1 git branch -d
 }
+markd() { glow "$@"; }
 alias k=kubectl
 kns() { kubectl config set-context --current --namespace "$1"; }
 
@@ -155,6 +156,10 @@ toggle-theme() {
 
 # zoxide init
 eval "$(zoxide init zsh)"
+
+# mcfly — smart history search (Ctrl+R)
+export MCFLY_RESULTS=60
+eval "$(mcfly init zsh)"
 
 # Claude session tracker — captures session ID on exit for easy resume
 claude() {

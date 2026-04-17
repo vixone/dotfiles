@@ -11,7 +11,7 @@ All unchecked tasks from your daily notes. Click the note link to jump to the or
 
 ## Quick Ideas
 
-- [ ] explore linkarzu videos for more inspiration on how to use the tools better → [[09-march]]
+*No unchecked ideas*
 
 ---
-*Generated: 2026-03-31 13:27*
+*Generated: 2026-04-14 17:44*
