@@ -3,6 +3,7 @@ Brewfile
 README.md
 LICENSE
 docs/
+skills/
 
 # Obsidian daily notes content (machine-specific, not portable)
 obsidian-notes/daily-notes
