@@ -1,0 +1,1035 @@
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;color:#1f2328;background:#fafaf7;padding:48px 32px;font-size:15px;line-height:1.6;">
+<div style="max-width:880px;margin:0 auto;">
+
+<!-- ========================= HERO ========================= -->
+
+<div style="font-family:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#164e3b;margin-bottom:14px;">Field Manual &nbsp;·&nbsp; Infrastructure Runbook</div>
+
+<h1 style="font-family:Georgia,'Iowan Old Style','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:46px;line-height:1.08;font-weight:600;letter-spacing:-0.015em;margin:0 0 14px;color:#1f2328;">Mission Memory Protocol</h1>
+
+<div style="font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;font-size:20px;line-height:1.45;color:#57606a;font-style:italic;margin:0 0 28px;max-width:640px;">A shared brain for AI-driven DevOps. Investigations that survive sessions, tools, and compactions.</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:28px;border-top:1px solid #d0d7de;border-bottom:1px solid #d0d7de;padding:12px 0;margin:0 0 44px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#57606a;font-family:ui-monospace,'SF Mono',Menlo,monospace;">
+<span><span style="color:#9aa0a6;">Stack&nbsp;—&nbsp;</span>Beads CLI + local Dolt DB</span>
+<span><span style="color:#9aa0a6;">Scope&nbsp;—&nbsp;</span>Cross-tool, local-first</span>
+<span><span style="color:#9aa0a6;">Storage&nbsp;—&nbsp;</span>~/.missions/.beads</span>
+</div>
+
+<p style="font-size:17px;line-height:1.65;color:#1f2328;margin:0 0 18px;">The Mission Memory Protocol turns any AI tool &mdash; Claude Code, Copilot CLI, Pi, Cursor &mdash; into a DevOps investigation platform with <em>persistent, cross-tool memory</em>. You work in plain language. Every finding, decision, action, and lesson is recorded in a local database accessible from any AI tool.</p>
+
+<p style="font-size:17px;line-height:1.65;color:#1f2328;margin:0 0 36px;">Your findings survive sessions. Your lessons survive tools. Your context is never lost again.</p>
+
+<!-- Activate callout -->
+<div style="border-left:3px solid #164e3b;padding:14px 22px;margin:0 0 56px;background:#f3f6f3;">
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">Activate</div>
+<div style="color:#1f2328;font-size:14.5px;line-height:1.6;">In any AI session, say
+<code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;border:1px solid #d0d7de;padding:1px 7px;border-radius:3px;font-size:12.5px;color:#164e3b;">mission: TOPIC</code>,
+<code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;border:1px solid #d0d7de;padding:1px 7px;border-radius:3px;font-size:12.5px;color:#164e3b;">start a mission</code>,
+<code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;border:1px solid #d0d7de;padding:1px 7px;border-radius:3px;font-size:12.5px;color:#164e3b;">resume mission</code>, or
+<code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;border:1px solid #d0d7de;padding:1px 7px;border-radius:3px;font-size:12.5px;color:#164e3b;">check missions</code>.</div>
+</div>
+
+<!-- ========================= § 01 THE PROBLEM ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;01</span>
+<h2 style="font-family:Georgia,'Iowan Old Style',serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">The Problem</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 24px;">Knowledge that doesn't persist.</div>
+
+<p style="margin:0 0 16px;">DevOps investigations are messy. You run dozens of <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 6px;border-radius:3px;font-size:13px;">kubectl</code>, <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 6px;border-radius:3px;font-size:13px;">aws</code>, and <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 6px;border-radius:3px;font-size:13px;">terraform</code> commands, cross-reference outputs across clusters, services, and accounts &mdash; and none of it outlives the session.</p>
+
+<p style="margin:0 0 28px;">After a few deep dives, things break down:</p>
+
+<!-- Comparison grid -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 40px;">
+
+<div style="border:1px solid #e5d5cd;border-radius:8px;padding:22px 22px 8px;background:#fef7f2;">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e5d5cd;">
+<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9a3412;"></span>
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;color:#9a3412;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;">Without mission memory</span>
+</div>
+<ul style="list-style:none;padding:0;margin:0;">
+<li style="padding:10px 0;border-bottom:1px dashed #efdfd5;font-size:14px;line-height:1.55;color:#5c3a2a;">Context window fills with raw command output</li>
+<li style="padding:10px 0;border-bottom:1px dashed #efdfd5;font-size:14px;line-height:1.55;color:#5c3a2a;"><code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#9a3412;border:1px solid #e5d5cd;">/compact</code> or <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#9a3412;border:1px solid #e5d5cd;">/clear</code> wipes the investigation</li>
+<li style="padding:10px 0;border-bottom:1px dashed #efdfd5;font-size:14px;line-height:1.55;color:#5c3a2a;">Next day = start from zero</li>
+<li style="padding:10px 0;border-bottom:1px dashed #efdfd5;font-size:14px;line-height:1.55;color:#5c3a2a;">Knowledge is trapped in one tool</li>
+<li style="padding:10px 0;border-bottom:1px dashed #efdfd5;font-size:14px;line-height:1.55;color:#5c3a2a;">Lessons evaporate between investigations</li>
+<li style="padding:10px 0;font-size:14px;line-height:1.55;color:#5c3a2a;">No audit trail of what was checked or decided</li>
+</ul>
+</div>
+
+<div style="border:1px solid #c8dcce;border-radius:8px;padding:22px 22px 8px;background:#f3f7f4;">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #c8dcce;">
+<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#164e3b;"></span>
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;color:#164e3b;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;">With mission memory</span>
+</div>
+<ul style="list-style:none;padding:0;margin:0;">
+<li style="padding:10px 0;border-bottom:1px dashed #dde9e1;font-size:14px;line-height:1.55;color:#1f3b2e;">Findings recorded atomically in Beads; summaries stay in-session</li>
+<li style="padding:10px 0;border-bottom:1px dashed #dde9e1;font-size:14px;line-height:1.55;color:#1f3b2e;">DB persists on disk &mdash; <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;border:1px solid #c8dcce;">/compact</code> freely, rehydrate from <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;border:1px solid #c8dcce;">bd show</code></li>
+<li style="padding:10px 0;border-bottom:1px dashed #dde9e1;font-size:14px;line-height:1.55;color:#1f3b2e;"><code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;border:1px solid #c8dcce;">bd ready</code> / <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;border:1px solid #c8dcce;">bd show ID</code> restores full context in seconds</li>
+<li style="padding:10px 0;border-bottom:1px dashed #dde9e1;font-size:14px;line-height:1.55;color:#1f3b2e;">Same DB accessed from Claude Code, Copilot, Pi, Cursor &mdash; any shell</li>
+<li style="padding:10px 0;border-bottom:1px dashed #dde9e1;font-size:14px;line-height:1.55;color:#1f3b2e;"><code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;background:#ffffff;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;border:1px solid #c8dcce;">bd remember</code> captures cross-mission insights that surface in <em>every</em> future session</li>
+<li style="padding:10px 0;font-size:14px;line-height:1.55;color:#1f3b2e;">Timestamped epic &rarr; findings / decisions / actions tree, plus threaded comments</li>
+</ul>
+</div>
+
+</div>
+
+<!-- Core insight pull quote -->
+<div style="border:1px solid #d0d7de;border-radius:8px;padding:24px 28px;margin:0 0 56px;background:#ffffff;position:relative;">
+<div style="font-family:Georgia,serif;font-size:64px;line-height:0.6;color:#164e3b;position:absolute;top:18px;left:16px;opacity:0.18;">&ldquo;</div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#164e3b;margin-bottom:8px;padding-left:34px;">Core insight</div>
+<div style="font-family:Georgia,serif;font-size:18px;line-height:1.5;color:#1f2328;padding-left:34px;font-style:italic;">Split the conversation from the knowledge. The AI reasons in its context window &mdash; ephemeral. <code style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-style:normal;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 6px;border-radius:3px;font-size:14px;color:#164e3b;">bd</code> remembers on disk &mdash; permanent.</div>
+</div>
+
+<!-- ========================= § 02 HOW IT WORKS ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;02</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">How It Works</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 28px;">One database, many tools.</div>
+
+<!-- Architecture SVG diagram -->
+<div style="border:1px solid #d0d7de;border-radius:10px;padding:36px 28px;margin:0 0 28px;background:#ffffff;">
+<svg viewBox="0 0 820 340" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#57606a"/>
+    </marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#164e3b"/>
+    </marker>
+  </defs>
+
+  <!-- YOU -->
+  <circle cx="60" cy="170" r="36" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+  <text x="60" y="168" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2328">You</text>
+  <text x="60" y="183" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.1em">OPERATOR</text>
+
+  <!-- AI TOOLS column (4 stacked) -->
+  <g font-size="12" fill="#1f2328">
+    <rect x="180" y="40"  width="180" height="48" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="270" y="62" text-anchor="middle" font-weight="600">Claude Code</text>
+    <text x="270" y="78" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.08em">AI TOOL</text>
+
+    <rect x="180" y="102" width="180" height="48" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="270" y="124" text-anchor="middle" font-weight="600">Copilot CLI</text>
+    <text x="270" y="140" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.08em">AI TOOL</text>
+
+    <rect x="180" y="164" width="180" height="48" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="270" y="186" text-anchor="middle" font-weight="600">Pi</text>
+    <text x="270" y="202" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.08em">AI TOOL</text>
+
+    <rect x="180" y="226" width="180" height="48" rx="6" fill="#f6f8fa" stroke="#d0d7de"/>
+    <text x="270" y="248" text-anchor="middle" font-weight="600">Cursor</text>
+    <text x="270" y="264" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.08em">AI TOOL</text>
+  </g>
+
+  <!-- You → AI tools lines -->
+  <path d="M 96 170 Q 140 64 180 64" fill="none" stroke="#57606a" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M 96 170 Q 140 126 180 126" fill="none" stroke="#57606a" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M 96 170 Q 140 188 180 188" fill="none" stroke="#57606a" stroke-width="1" marker-end="url(#arr)"/>
+  <path d="M 96 170 Q 140 250 180 250" fill="none" stroke="#57606a" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- AI tools → bd CLI converging -->
+  <path d="M 360 64  Q 430 80  490 164" fill="none" stroke="#164e3b" stroke-width="1.2" marker-end="url(#arrg)"/>
+  <path d="M 360 126 Q 430 140 490 172" fill="none" stroke="#164e3b" stroke-width="1.2" marker-end="url(#arrg)"/>
+  <path d="M 360 188 Q 430 186 490 178" fill="none" stroke="#164e3b" stroke-width="1.2" marker-end="url(#arrg)"/>
+  <path d="M 360 250 Q 430 220 490 186" fill="none" stroke="#164e3b" stroke-width="1.2" marker-end="url(#arrg)"/>
+
+  <!-- bd CLI box -->
+  <rect x="490" y="150" width="110" height="60" rx="8" fill="#164e3b"/>
+  <text x="545" y="178" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff" font-family="ui-monospace,Menlo,monospace">bd</text>
+  <text x="545" y="196" text-anchor="middle" font-size="10" fill="#c8dcce" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.12em">BEADS CLI</text>
+
+  <!-- bd CLI → DB double-arrow -->
+  <path d="M 600 180 L 680 180" fill="none" stroke="#164e3b" stroke-width="1.2" marker-end="url(#arrg)" marker-start="url(#arrg)"/>
+  <text x="640" y="172" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace">read / write</text>
+
+  <!-- DB cylinder -->
+  <g>
+    <ellipse cx="740" cy="150" rx="40" ry="10" fill="#f3f6f3" stroke="#164e3b" stroke-width="1.2"/>
+    <path d="M 700 150 L 700 210 Q 700 220 740 220 Q 780 220 780 210 L 780 150" fill="#f3f6f3" stroke="#164e3b" stroke-width="1.2"/>
+    <ellipse cx="740" cy="150" rx="40" ry="10" fill="none" stroke="#164e3b" stroke-width="1.2"/>
+    <text x="740" y="188" text-anchor="middle" font-size="11" font-weight="700" fill="#164e3b" font-family="ui-monospace,Menlo,monospace">.beads</text>
+    <text x="740" y="204" text-anchor="middle" font-size="9" fill="#164e3b" font-family="ui-monospace,Menlo,monospace" letter-spacing="0.08em">DOLT DB</text>
+  </g>
+  <text x="740" y="242" text-anchor="middle" font-size="10" fill="#57606a" font-family="ui-monospace,Menlo,monospace">~/.missions/.beads</text>
+
+  <!-- Bottom caption strip -->
+  <line x1="180" y1="300" x2="780" y2="300" stroke="#d0d7de" stroke-dasharray="2 3"/>
+  <text x="480" y="320" text-anchor="middle" font-size="11" fill="#57606a" font-style="italic">Same database. Any AI tool. Any terminal.</text>
+</svg>
+</div>
+
+<p style="margin:0 0 18px;">The protocol has three concepts:</p>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 48px;">
+
+<div style="border:1px solid #d0d7de;border-radius:8px;padding:18px;background:#ffffff;">
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#164e3b;margin-bottom:8px;">01 &middot; Mission</div>
+<div style="font-size:13.5px;line-height:1.55;color:#1f2328;">An epic in <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 4px;border-radius:3px;font-size:12px;color:#164e3b;">bd</code>, one per investigation. Contains findings, decisions, actions as child issues.</div>
+</div>
+
+<div style="border:1px solid #d0d7de;border-radius:8px;padding:18px;background:#ffffff;">
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#164e3b;margin-bottom:8px;">02 &middot; Lesson</div>
+<div style="font-size:13.5px;line-height:1.55;color:#1f2328;">A cross-mission insight via <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 4px;border-radius:3px;font-size:12px;color:#164e3b;">bd remember</code>. Surfaces in every future session via <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 4px;border-radius:3px;font-size:12px;color:#164e3b;">bd memories</code>.</div>
+</div>
+
+<div style="border:1px solid #d0d7de;border-radius:8px;padding:18px;background:#ffffff;">
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#164e3b;margin-bottom:8px;">03 &middot; Agents</div>
+<div style="font-size:13.5px;line-height:1.55;color:#1f2328;">Optional. Dispatch <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 4px;border-radius:3px;font-size:12px;color:#164e3b;">infra-reader</code> or <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 4px;border-radius:3px;font-size:12px;color:#164e3b;">infra-executor</code> as subagents to parallelize.</div>
+</div>
+
+</div>
+
+<!-- ========================= § 03 ANATOMY ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;03</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">Anatomy of a Mission</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 28px;">An epic with child issues. Each piece of knowledge is atomic and individually searchable.</div>
+
+<!-- Anatomy visual tree -->
+<div style="border:1px solid #d0d7de;border-radius:10px;padding:32px;margin:0 0 28px;background:#ffffff;">
+<div style="display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:start;">
+
+<!-- LEFT: Mission with children tree -->
+<div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#9aa0a6;margin-bottom:16px;">Mission-scoped</div>
+
+<div style="border:2px solid #164e3b;border-radius:8px;padding:14px 16px;background:#f3f6f3;margin-bottom:4px;">
+<div style="display:flex;align-items:center;gap:10px;">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;background:#164e3b;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">EPIC</span>
+<span style="font-weight:600;color:#1f2328;font-size:15px;">Mission</span>
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#57606a;margin-left:auto;">mission-a1b2</span>
+</div>
+<div style="font-size:12.5px;color:#57606a;margin-top:6px;">Top-level investigation. Created with <code style="font-family:ui-monospace,Menlo,monospace;background:#fff;border:1px solid #c8dcce;padding:0 4px;border-radius:3px;font-size:11.5px;color:#164e3b;">bd create &hellip; --type epic</code></div>
+</div>
+
+<!-- tree indent -->
+<div style="position:relative;padding-left:26px;">
+<div style="position:absolute;left:14px;top:0;bottom:14px;border-left:1px solid #c8dcce;"></div>
+
+<div style="position:relative;padding:14px 16px;margin-top:14px;border:1px solid #d0d7de;border-radius:6px;background:#ffffff;">
+<div style="position:absolute;left:-12px;top:22px;width:12px;border-top:1px solid #c8dcce;"></div>
+<div style="display:flex;align-items:center;gap:10px;">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;background:#f3f6f3;color:#164e3b;padding:2px 8px;border-radius:4px;border:1px solid #c8dcce;font-weight:600;">FINDING</span>
+<span style="font-weight:500;color:#1f2328;font-size:14px;">Discovery</span>
+</div>
+<div style="font-size:12.5px;color:#57606a;margin-top:4px;">Something observed or checked during investigation.</div>
+</div>
+
+<div style="position:relative;padding:14px 16px;margin-top:10px;border:1px solid #d0d7de;border-radius:6px;background:#ffffff;">
+<div style="position:absolute;left:-12px;top:22px;width:12px;border-top:1px solid #c8dcce;"></div>
+<div style="display:flex;align-items:center;gap:10px;">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;background:#f3f6f3;color:#164e3b;padding:2px 8px;border-radius:4px;border:1px solid #c8dcce;font-weight:600;">DECISION</span>
+<span style="font-weight:500;color:#1f2328;font-size:14px;">Choice + reasoning</span>
+</div>
+<div style="font-size:12.5px;color:#57606a;margin-top:4px;">A decision made, with the &ldquo;why&rdquo; preserved.</div>
+</div>
+
+<div style="position:relative;padding:14px 16px;margin-top:10px;border:1px solid #d0d7de;border-radius:6px;background:#ffffff;">
+<div style="position:absolute;left:-12px;top:22px;width:12px;border-top:1px solid #c8dcce;"></div>
+<div style="display:flex;align-items:center;gap:10px;">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;background:#f3f6f3;color:#164e3b;padding:2px 8px;border-radius:4px;border:1px solid #c8dcce;font-weight:600;">ACTION</span>
+<span style="font-weight:500;color:#1f2328;font-size:14px;">Change executed</span>
+</div>
+<div style="font-size:12.5px;color:#57606a;margin-top:4px;">Something executed or modified.</div>
+</div>
+
+</div>
+
+<div style="margin-top:20px;padding:10px 14px;border:1px dashed #d0d7de;border-radius:6px;font-size:12px;color:#57606a;">
+<code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;padding:0 4px;border-radius:3px;font-size:11.5px;color:#164e3b;">bd comment ID</code> &middot; chronological &nbsp;&middot;&nbsp;
+<code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;padding:0 4px;border-radius:3px;font-size:11.5px;color:#164e3b;">bd note ID</code> &middot; amendment
+</div>
+</div>
+
+<!-- RIGHT: Lessons -->
+<div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#9aa0a6;margin-bottom:16px;">Cross-mission</div>
+
+<div style="border:2px dashed #9a3412;border-radius:8px;padding:18px;background:#fef7f2;margin-bottom:14px;">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;background:#9a3412;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600;">LESSON</span>
+<span style="font-weight:600;color:#1f2328;font-size:15px;">Persistent memory</span>
+</div>
+<div style="font-size:13px;line-height:1.55;color:#5c3a2a;">Reusable insight. Surfaces in <em>every</em> future session, across <em>every</em> AI tool.</div>
+<div style="font-family:ui-monospace,Menlo,monospace;margin-top:10px;background:#ffffff;padding:8px 10px;border-radius:4px;font-size:11.5px;color:#9a3412;border:1px solid #e5d5cd;">bd remember &quot;Insight&quot; --key domain-slug</div>
+</div>
+
+<div style="font-size:12.5px;line-height:1.6;color:#57606a;padding:12px 0;border-top:1px solid #d0d7de;">
+<div style="margin-bottom:6px;"><strong style="color:#1f2328;">Recall</strong> &nbsp;<code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;padding:0 4px;border-radius:3px;font-size:11.5px;color:#9a3412;border:1px solid #d0d7de;">bd recall KEY</code></div>
+<div style="margin-bottom:6px;"><strong style="color:#1f2328;">List all</strong> &nbsp;<code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;padding:0 4px;border-radius:3px;font-size:11.5px;color:#9a3412;border:1px solid #d0d7de;">bd memories</code></div>
+<div><strong style="color:#1f2328;">Forget</strong> &nbsp;<code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;padding:0 4px;border-radius:3px;font-size:11.5px;color:#9a3412;border:1px solid #d0d7de;">bd forget KEY</code></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<!-- Anatomy reference table -->
+<div style="margin:0 0 56px;">
+<table style="width:100%;border-collapse:collapse;font-size:13.5px;">
+<thead>
+<tr>
+<th style="text-align:left;padding:10px 14px 10px 0;border-bottom:2px solid #1f2328;font-weight:600;color:#1f2328;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-family:ui-monospace,Menlo,monospace;width:14%;">Element</th>
+<th style="text-align:left;padding:10px 14px;border-bottom:2px solid #1f2328;font-weight:600;color:#1f2328;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-family:ui-monospace,Menlo,monospace;">Command</th>
+<th style="text-align:left;padding:10px 0 10px 14px;border-bottom:2px solid #1f2328;font-weight:600;color:#1f2328;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-family:ui-monospace,Menlo,monospace;width:26%;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="padding:11px 14px 11px 0;border-bottom:1px solid #d0d7de;font-weight:600;color:#164e3b;">Mission</td><td style="padding:11px 14px;border-bottom:1px solid #d0d7de;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd create "Title" --type epic --labels domain -p 1</code></td><td style="padding:11px 0 11px 14px;border-bottom:1px solid #d0d7de;color:#57606a;">Top-level investigation</td></tr>
+<tr><td style="padding:11px 14px 11px 0;border-bottom:1px solid #d0d7de;font-weight:600;color:#164e3b;">Finding</td><td style="padding:11px 14px;border-bottom:1px solid #d0d7de;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd create "Discovery" --parent EPIC_ID --labels domain,finding -d "&hellip;"</code></td><td style="padding:11px 0 11px 14px;border-bottom:1px solid #d0d7de;color:#57606a;">Observed or checked</td></tr>
+<tr><td style="padding:11px 14px 11px 0;border-bottom:1px solid #d0d7de;font-weight:600;color:#164e3b;">Decision</td><td style="padding:11px 14px;border-bottom:1px solid #d0d7de;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd create "Choice" --parent EPIC_ID --labels domain,decision -d "&hellip;"</code></td><td style="padding:11px 0 11px 14px;border-bottom:1px solid #d0d7de;color:#57606a;">Decision + &ldquo;why&rdquo;</td></tr>
+<tr><td style="padding:11px 14px 11px 0;border-bottom:1px solid #d0d7de;font-weight:600;color:#164e3b;">Action</td><td style="padding:11px 14px;border-bottom:1px solid #d0d7de;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd create "Change" --parent EPIC_ID --labels domain,action -d "&hellip;"</code></td><td style="padding:11px 0 11px 14px;border-bottom:1px solid #d0d7de;color:#57606a;">Executed or modified</td></tr>
+<tr><td style="padding:11px 14px 11px 0;border-bottom:1px solid #d0d7de;font-weight:600;color:#164e3b;">Comment</td><td style="padding:11px 14px;border-bottom:1px solid #d0d7de;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd comment ID "Update"</code></td><td style="padding:11px 0 11px 14px;border-bottom:1px solid #d0d7de;color:#57606a;">Chronological, threaded</td></tr>
+<tr><td style="padding:11px 14px 11px 0;border-bottom:1px solid #d0d7de;font-weight:600;color:#164e3b;">Note</td><td style="padding:11px 14px;border-bottom:1px solid #d0d7de;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd note ID "Amendment"</code></td><td style="padding:11px 0 11px 14px;border-bottom:1px solid #d0d7de;color:#57606a;">Summary-level edit</td></tr>
+<tr><td style="padding:11px 14px 11px 0;font-weight:600;color:#9a3412;">Lesson</td><td style="padding:11px 14px;"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#1f2328;">bd remember "Insight" --key domain-slug</code></td><td style="padding:11px 0 11px 14px;color:#57606a;">Cross-mission knowledge</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ========================= § 04 HOW YOU USE IT ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;04</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">How You Use It</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 24px;">You speak. The AI handles the protocol.</div>
+
+<p style="margin:0 0 14px;">The commands in the table above are what the <em>AI</em> runs. You don&rsquo;t memorize them, don&rsquo;t type them, and &mdash; on most days &mdash; never see them. You say something in plain language and the AI does the bookkeeping. A few patterns cover almost everything:</p>
+
+<!-- Phrase list -->
+<div style="border:1px solid #d0d7de;border-radius:10px;background:#ffffff;margin:0 0 24px;overflow:hidden;">
+
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.9fr);gap:0;">
+
+<!-- row 1 -->
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;mission: ARC runners crashlooping on athena&rdquo;</div>
+</div>
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Creates a new epic, labels it, claims it as active.</div>
+</div>
+
+<!-- row 2 -->
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;update the mission&rdquo;</div>
+</div>
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Looks up the active epic, adds findings / decisions / actions from the current conversation, amends the summary as needed.</div>
+</div>
+
+<!-- row 3 -->
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;resume the mission about arc-runners&rdquo;</div>
+</div>
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Searches epics by topic (you don&rsquo;t need the ID), pulls up findings, decisions, timeline &mdash; you&rsquo;re back in full context in seconds.</div>
+</div>
+
+<!-- row 4 -->
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;any past missions or lessons about Artifactory tokens?&rdquo;</div>
+</div>
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Scans cross-mission memory and epic descriptions, surfaces the relevant lessons and prior investigations.</div>
+</div>
+
+<!-- row 5 -->
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;new mission &mdash; same setup but for the payments team&rdquo;</div>
+</div>
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Creates a new epic seeded from the prior one &mdash; carries forward relevant findings as starting context, links the two for traceability.</div>
+</div>
+
+<!-- row 6 -->
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;park it &mdash; waiting on platform team&rdquo;</div>
+</div>
+<div style="padding:18px 22px;border-bottom:1px solid #e8ebef;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Defers the mission, logs the wait-state as a comment so the reason is preserved.</div>
+</div>
+
+<!-- row 7 -->
+<div style="padding:18px 22px;border-right:1px solid #e8ebef;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:6px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:16px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;close it &mdash; all fixed&rdquo;</div>
+</div>
+<div style="padding:18px 22px;background:#fbfbf9;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">AI does</div>
+<div style="font-size:13.5px;color:#57606a;line-height:1.5;">Extracts reusable lessons into cross-mission memory, closes the epic with a summary of what happened.</div>
+</div>
+
+</div>
+</div>
+
+<p style="margin:0 0 56px;font-size:13.5px;color:#57606a;font-style:italic;">The <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;font-style:normal;">bd</code> commands you&rsquo;ll see in the walkthrough are <em>what the AI runs on your behalf</em> &mdash; shown for transparency, not as something you need to type.</p>
+
+<!-- ========================= § 05 MISSIONS COMPOUND ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;05</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">Missions Compound</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 24px;">The payoff is two weeks later.</div>
+
+<p style="margin:0 0 28px;">A single mission is useful. A <em>library</em> of missions is the real win. Old investigations become seed context for new ones &mdash; you don&rsquo;t re-derive what you already figured out. Three patterns come up constantly:</p>
+
+<!-- Three scenario cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 32px;">
+
+<!-- Recall -->
+<div style="border:1px solid #d0d7de;border-radius:10px;padding:22px;background:#ffffff;display:flex;flex-direction:column;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9a3412;margin-bottom:10px;">01 &middot; Recall</div>
+<div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1f2328;margin-bottom:10px;line-height:1.3;">Ask about a past topic.</div>
+<div style="font-size:13.5px;line-height:1.55;color:#57606a;margin-bottom:14px;flex-grow:1;">Weeks after an investigation, a related question surfaces. Ask about the topic &mdash; the AI searches past findings and cross-mission lessons and brings back the fix, the root cause, and the reasoning.</div>
+<div style="border-left:2px solid #9a3412;padding-left:12px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:14px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;any past missions about Artifactory tokens?&rdquo;</div>
+</div>
+</div>
+
+<!-- Seed -->
+<div style="border:1px solid #d0d7de;border-radius:10px;padding:22px;background:#ffffff;display:flex;flex-direction:column;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9a3412;margin-bottom:10px;">02 &middot; Seed</div>
+<div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1f2328;margin-bottom:10px;line-height:1.3;">Clone an old mission for new team.</div>
+<div style="font-size:13.5px;line-height:1.55;color:#57606a;margin-bottom:14px;flex-grow:1;">Onboarding another team to the same setup? Point at the old mission &mdash; the AI creates a new epic seeded with the prior findings so the new mission starts where the old one ended.</div>
+<div style="border-left:2px solid #9a3412;padding-left:12px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:14px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;new mission for the payments team &mdash; same arc setup as before&rdquo;</div>
+</div>
+</div>
+
+<!-- Branch -->
+<div style="border:1px solid #d0d7de;border-radius:10px;padding:22px;background:#ffffff;display:flex;flex-direction:column;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9a3412;margin-bottom:10px;">03 &middot; Branch</div>
+<div style="font-family:Georgia,serif;font-size:18px;font-weight:600;color:#1f2328;margin-bottom:10px;line-height:1.3;">Follow a thread downstream.</div>
+<div style="font-size:13.5px;line-height:1.55;color:#57606a;margin-bottom:14px;flex-grow:1;">A related issue surfaces two weeks later &mdash; queue stops draining, HPA misbehaves, tokens rotate oddly. The AI opens a linked mission carrying forward the domain knowledge so the new investigation starts with context.</div>
+<div style="border-left:2px solid #9a3412;padding-left:12px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">You say</div>
+<div style="font-family:Georgia,serif;font-size:14px;line-height:1.45;color:#1f2328;font-style:italic;">&ldquo;new arc issue &mdash; probably relates to the old mission&rdquo;</div>
+</div>
+</div>
+
+</div>
+
+<!-- Payoff callout -->
+<div style="border-left:3px solid #9a3412;padding:16px 22px;margin:0 0 56px;background:#fef7f2;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#9a3412;font-weight:700;margin-bottom:6px;">Why it matters</div>
+<div style="font-size:14px;line-height:1.6;color:#5c3a2a;">You never typed a single <code style="font-family:ui-monospace,Menlo,monospace;background:#ffffff;border:1px solid #e5d5cd;padding:0 5px;border-radius:3px;font-size:12.5px;color:#9a3412;">bd</code> command in any of these. Behind the scenes the AI uses <code style="font-family:ui-monospace,Menlo,monospace;background:#ffffff;border:1px solid #e5d5cd;padding:0 5px;border-radius:3px;font-size:12.5px;color:#9a3412;">bd search</code>, <code style="font-family:ui-monospace,Menlo,monospace;background:#ffffff;border:1px solid #e5d5cd;padding:0 5px;border-radius:3px;font-size:12.5px;color:#9a3412;">bd memories</code>, <code style="font-family:ui-monospace,Menlo,monospace;background:#ffffff;border:1px solid #e5d5cd;padding:0 5px;border-radius:3px;font-size:12.5px;color:#9a3412;">bd link</code> to do the work. Your domain knowledge accrues. Future-you (or a teammate in a different tool) starts two weeks ahead.</div>
+</div>
+
+<!-- ========================= § 06 WALKTHROUGH ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;06</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">Walkthrough</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 14px;">An ARC-runner investigation, from trigger to close.</div>
+<p style="margin:0 0 32px;font-size:13.5px;color:#57606a;">The left-hand bubbles are what <em>you</em> say. The dark blocks below them are what the <em>AI</em> runs in response &mdash; included so you can see the bookkeeping, not because you&rsquo;ll type any of it.</p>
+
+<!-- Timeline -->
+<div style="position:relative;margin:0 0 56px;padding-left:32px;">
+<div style="position:absolute;left:10px;top:12px;bottom:12px;border-left:1px dashed #c8dcce;"></div>
+
+<!-- Day 1 -->
+<div style="position:relative;margin-bottom:24px;">
+<div style="position:absolute;left:-32px;top:2px;width:22px;height:22px;border-radius:50%;background:#164e3b;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#fff;font-weight:700;">1</div>
+<div style="font-family:Georgia,serif;font-size:20px;font-weight:600;color:#1f2328;margin-bottom:4px;">Day 1 &mdash; Start the mission</div>
+</div>
+
+<!-- User voice bubble -->
+<div style="border-left:3px solid #164e3b;background:#f3f6f3;padding:12px 18px;margin:0 0 10px;border-radius:0 6px 6px 0;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:4px;">You</div>
+<div style="font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#1f2328;font-style:italic;">&ldquo;mission: ARC runner pods are CrashLooping on the Athena test cluster&rdquo;</div>
+</div>
+<div style="margin:0 0 22px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">AI runs behind the scenes</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre;"><span style="color:#7ee787;">bd create</span> <span style="color:#a5d6ff;">"ARC runner pods CrashLooping on Athena test"</span> --type epic --labels eks,arc-runners,docker -p 1
+<span style="color:#8b949e;"># &rarr; mission-a1b2</span>
+<span style="color:#7ee787;">bd update</span> mission-a1b2 --claim</div>
+</div>
+
+<!-- Step 1 marker -->
+<div style="position:relative;margin-bottom:10px;">
+<div style="position:absolute;left:-32px;top:2px;width:22px;height:22px;border-radius:50%;background:#ffffff;border:1.5px solid #164e3b;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#164e3b;font-weight:700;">&#9679;</div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;">Quick status check</div>
+</div>
+<div style="border-left:3px solid #164e3b;background:#f3f6f3;padding:12px 18px;margin:0 0 10px;border-radius:0 6px 6px 0;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:4px;">You</div>
+<div style="font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#1f2328;font-style:italic;">&ldquo;check what pods are running in arc-system&rdquo;</div>
+</div>
+<div style="margin:0 0 22px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">AI runs kubectl, then records the finding</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre;"><span style="color:#7ee787;">bd create</span> <span style="color:#a5d6ff;">"2 runner pods in CrashLoopBackOff, 1 controller Running"</span> \
+  --parent mission-a1b2 --labels eks,finding \
+  -d <span style="color:#a5d6ff;">"kubectl get pods -n arc-system: 2x runner CrashLoopBackOff..."</span></div>
+</div>
+
+<!-- Step 2 -->
+<div style="position:relative;margin-bottom:10px;">
+<div style="position:absolute;left:-32px;top:2px;width:22px;height:22px;border-radius:50%;background:#ffffff;border:1.5px solid #164e3b;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#164e3b;font-weight:700;">&#9679;</div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;">Deep dive</div>
+</div>
+<div style="border-left:3px solid #164e3b;background:#f3f6f3;padding:12px 18px;margin:0 0 10px;border-radius:0 6px 6px 0;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:4px;">You</div>
+<div style="font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#1f2328;font-style:italic;">&ldquo;why are they CrashLooping?&rdquo;</div>
+</div>
+<div style="margin:0 0 22px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">AI checks events + logs, records three atomic findings</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre;"><span style="color:#7ee787;">bd create</span> <span style="color:#a5d6ff;">"ImagePullBackOff &mdash; 401 from artifactory.rbro.internal"</span> \
+  --parent mission-a1b2 --labels docker,finding
+
+<span style="color:#7ee787;">bd create</span> <span style="color:#a5d6ff;">"Root cause: expired Artifactory pull token"</span> \
+  --parent mission-a1b2 --labels docker,finding
+
+<span style="color:#7ee787;">bd create</span> <span style="color:#a5d6ff;">"Who owns Artifactory service-account rotation?"</span> \
+  --parent mission-a1b2 --labels iam,finding</div>
+</div>
+
+<!-- Park -->
+<div style="position:relative;margin-bottom:10px;">
+<div style="position:absolute;left:-32px;top:2px;width:22px;height:22px;border-radius:50%;background:#ffffff;border:1.5px solid #9a3412;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#9a3412;font-weight:700;">&#8214;</div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9a3412;">Park for tomorrow</div>
+</div>
+<div style="border-left:3px solid #9a3412;background:#fef7f2;padding:12px 18px;margin:0 0 10px;border-radius:0 6px 6px 0;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9a3412;margin-bottom:4px;">You</div>
+<div style="font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#1f2328;font-style:italic;">&ldquo;park this &mdash; waiting for platform team to rotate the token&rdquo;</div>
+</div>
+<div style="margin:0 0 36px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">AI defers and notes the wait-state</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre;"><span style="color:#7ee787;">bd defer</span> mission-a1b2 --until=<span style="color:#a5d6ff;">"tomorrow"</span>
+<span style="color:#7ee787;">bd comment</span> mission-a1b2 <span style="color:#a5d6ff;">"Parked: waiting for new Artifactory service-account token"</span></div>
+</div>
+
+<!-- Day 2 -->
+<div style="position:relative;margin-bottom:24px;">
+<div style="position:absolute;left:-32px;top:2px;width:22px;height:22px;border-radius:50%;background:#164e3b;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#fff;font-weight:700;">2</div>
+<div style="font-family:Georgia,serif;font-size:20px;font-weight:600;color:#1f2328;margin-bottom:4px;">Day 2 &mdash; Resume (maybe in a different tool)</div>
+</div>
+<div style="border-left:3px solid #164e3b;background:#f3f6f3;padding:12px 18px;margin:0 0 10px;border-radius:0 6px 6px 0;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:4px;">You</div>
+<div style="font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#1f2328;font-style:italic;">&ldquo;resume the mission about arc-runners&rdquo;</div>
+</div>
+<div style="margin:0 0 22px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">AI finds it by topic and rehydrates context</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre;"><span style="color:#7ee787;">bd show</span> mission-a1b2        <span style="color:#8b949e;"># where we left off</span>
+<span style="color:#7ee787;">bd children</span> mission-a1b2    <span style="color:#8b949e;"># all findings so far</span>
+<span style="color:#7ee787;">bd history</span> mission-a1b2     <span style="color:#8b949e;"># timeline</span>
+<span style="color:#7ee787;">bd undefer</span> mission-a1b2     <span style="color:#8b949e;"># mark active</span></div>
+</div>
+
+<!-- Landing -->
+<div style="position:relative;margin-bottom:10px;">
+<div style="position:absolute;left:-32px;top:2px;width:22px;height:22px;border-radius:50%;background:#164e3b;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#fff;font-weight:700;">&#10003;</div>
+<div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;">Landing the plane</div>
+</div>
+<div style="border-left:3px solid #164e3b;background:#f3f6f3;padding:12px 18px;margin:0 0 10px;border-radius:0 6px 6px 0;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#164e3b;margin-bottom:4px;">You</div>
+<div style="font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#1f2328;font-style:italic;">&ldquo;token rotated, pods are healthy &mdash; close it out&rdquo;</div>
+</div>
+<div style="margin:0 0 10px;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0a6;margin-bottom:4px;">AI records the action, extracts a reusable lesson, closes</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre;"><span style="color:#7ee787;">bd create</span> <span style="color:#a5d6ff;">"Rotated pull secret, restarted rollout &mdash; pods Running"</span> \
+  --parent mission-a1b2 --labels eks,action
+
+<span style="color:#ffa657;">bd remember</span> <span style="color:#a5d6ff;">"Artifactory pull-secret tokens expire silently after 90 days"</span> \
+  --key docker-artifactory-token-rotation
+
+<span style="color:#7ee787;">bd close</span> mission-a1b2 --reason <span style="color:#a5d6ff;">"Expired token rotated; pods healthy."</span></div>
+</div>
+
+<div style="font-size:13.5px;color:#57606a;font-style:italic;margin-top:20px;">The lesson will surface in future sessions, across every AI tool, whenever the topic comes up again.</div>
+
+</div>
+
+<!-- ========================= § 07 THE PROTOCOL ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;07</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">The Protocol</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 24px;">The whole skill is one markdown file.</div>
+
+<p style="margin:0 0 14px;">Everything you&rsquo;ve read so far &mdash; the command conventions, the labels, the lifecycle, the gotchas &mdash; lives in a single file at <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/MISSIONS.md</code>. Your AI tool reads it when a mission phrase is detected and follows its instructions. That is the entire skill. No plugins, no binaries beyond <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">bd</code>.</p>
+
+<p style="margin:0 0 20px;">The installer drops it in for you, but if you&rsquo;d rather copy-paste, here it is &mdash; unmodified. Save it to <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/MISSIONS.md</code> and point your AI tool&rsquo;s system prompt at it (see <a href="#install" style="color:#164e3b;">Installation</a>).</p>
+
+<div style="background:#1f2328;color:#e6edf3;padding:22px 26px;border-radius:8px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;line-height:1.55;overflow:auto;max-height:540px;margin:0 0 18px;white-space:pre;"># Mission Memory Protocol
+
+You have access to a persistent mission knowledge base via the `bd` CLI (Beads).
+This is a shared brain across all AI tools — anything recorded here is accessible
+from Claude Code, Copilot CLI, Pi, Cursor, or any tool that can run bash commands.
+
+**Activate when:** the user says "mission: &lt;topic&gt;", "start a mission", "check missions",
+"search missions", "resume mission", or similar. Otherwise, do not proactively load mission context.
+
+**Environment:** `BEADS_DIR` is set in the shell profile (`~/.zshrc`) pointing to `~/.missions/.beads`. Just run `bd` commands directly — no export needed:
+```bash
+bd list
+bd search "topic"
+```
+
+For full `bd` command reference, run `bd prime --full`. This document covers
+**mission-specific conventions only**.
+
+### Ironclad rules for agents
+
+1. **Missions are global.** `BEADS_DIR` must always point at `~/.missions/.beads`.
+   **Never** create or use a project-local `.beads/` directory. When shelling
+   out from an extension/wrapper, export `BEADS_DIR` explicitly — child
+   processes don't always inherit it from the user's shell profile.
+2. **Never use `bd edit`.** It opens `$EDITOR` and will hang an agent. Use
+   **`bd update`** with flags for all programmatic metadata changes:
+   ```bash
+   bd update &lt;id&gt; --title "New title"
+   bd update &lt;id&gt; --priority P2
+   bd update &lt;id&gt; --add-label foo --remove-label bar
+   bd update &lt;id&gt; --set-labels iam,finding
+   bd update &lt;id&gt; --status closed   # equivalent to bd close &lt;id&gt;
+   ```
+   `bd edit` stays reserved for humans editing descriptions/design notes in
+   their editor.
+3. **Never rely on `bd show --current`.** "Current" is a single global pointer
+   per database, which is unsafe when multiple agents/sessions work different
+   missions in parallel. Track the active mission per-session instead (e.g.
+   the pi `/focus` extension), and always pass explicit mission IDs to `bd`.
+4. **Titles are prefixed by type.** All child issues of a mission epic start
+   with one of `[finding]`, `[decision]`, `[action]`. This lets `bd children`
+   be skimmed at a glance: anything that's not `[action]` is history.
+
+## Quick Reference
+
+| Action | Command |
+|--------|---------|
+| **Start mission** | `bd create "Title" --type epic --labels domain1,domain2 -p 1` |
+| **What's next** | `bd ready` |
+| **Record finding** | `bd create "What" --parent &lt;epic-id&gt; --labels domain,finding -d "Details"` |
+| **Record decision** | `bd create "What" --parent &lt;epic-id&gt; --labels domain,decision -d "Reasoning"` |
+| **Record action** | `bd create "What" --parent &lt;epic-id&gt; --labels domain,action -d "Details"` |
+| **Record lesson** | `bd remember "Reusable insight" --key domain-slug` |
+| **List lessons** | `bd memories` |
+| **Recall lesson** | `bd recall &lt;key&gt;` |
+| **Forget lesson** | `bd forget &lt;key&gt;` |
+| **Add comment** | `bd comment &lt;id&gt; "Chronological update"` |
+| **Amend summary** | `bd note &lt;id&gt; "Description-level amendment"` |
+| **Search** | `bd search "query" --status all` |
+| **Search by label** | `bd search "query" --label finding --status all` |
+| **Search descriptions** | `bd search "query" --desc-contains "detail" --status all` |
+| **Park mission** | `bd defer &lt;epic-id&gt;` or `bd defer &lt;epic-id&gt; --until="next monday"` |
+| **Resume mission** | `bd undefer &lt;epic-id&gt;` |
+| **Close mission** | `bd close &lt;epic-id&gt; --reason "Summary"` |
+| **Reopen mission** | `bd reopen &lt;epic-id&gt;` |
+| **Show details** | `bd show &lt;epic-id&gt;` |
+| **Mission children** | `bd children &lt;epic-id&gt;` |
+| **Execution timeline** | `bd history &lt;epic-id&gt;` |
+| **Epic completeness** | `bd epic status &lt;epic-id&gt;` |
+| **Link missions** | `bd link &lt;id1&gt; &lt;id2&gt; --type relates_to` |
+| **Stale check** | `bd stale --days 14` |
+
+## Starting a Mission
+
+```bash
+# Create the mission epic
+bd create "IAM Permission Boundaries" --type epic --labels iam,security -p 1
+
+# Note the returned ID (e.g., mission-a1b2) — use it as --parent for all child issues
+# Claim it to mark as actively worked on
+bd update mission-a1b2 --claim
+```
+
+If the user starts with something small that grows, create the epic when scope becomes clear.
+Retroactively parent earlier findings to the epic.
+
+## Recording Knowledge
+
+After each investigation step, capture knowledge **atomically**:
+
+**Findings, decisions, actions** — create as child issues of the epic. These are
+mission-scoped and individually searchable. Title prefix is mandatory; label
+mirrors the prefix.
+
+```bash
+# Finding — something discovered during investigation (read-only history)
+FID=$(bd create "[finding] Dev accounts lack permission boundaries" --parent mission-a1b2 \
+  --labels iam,finding -d "Checked accounts 111, 222, 333. None have boundary policies." \
+  --json | jq -r .id)
+bd close "$FID"   # close immediately — it's history, not outstanding work
+
+# Decision — a choice made, with reasoning (read-only history)
+DID=$(bd create "[decision] Use permission boundaries over SCPs" --parent mission-a1b2 \
+  --labels iam,decision -d "SCPs apply at account level. Boundaries give per-user control." \
+  --json | jq -r .id)
+bd close "$DID"
+
+# Action — work to do, in progress, or done. STAYS OPEN until actually executed.
+bd create "[action] Apply boundary to dev accounts" --parent mission-a1b2 \
+  --labels iam,action -d "Apply rbro-dev-boundary-v1 to accounts 111, 222, 333."
+# ... later, when done:
+# bd close mission-a1b2.N
+```
+
+**Why close findings/decisions immediately?** They are immutable history.
+Keeping them "open" makes `bd children &lt;epic&gt;` useless for answering
+"what's left to do?" — the only legitimate open children should be
+`[action]` items that haven't been executed yet.
+
+**Lessons** — use `bd remember` instead of child issues. Lessons are cross-mission
+knowledge that should surface in every future session:
+
+```bash
+# Lesson — reusable knowledge for future missions
+bd remember "Tags set in org root don't always propagate — verify per-account" \
+  --key iam-tag-propagation
+
+# Domain-prefix keys: iam-*, eks-*, terraform-*, s3-*, etc.
+bd remember "smec pattern catches smechannel but NOT sme-commons — distinct naming roots" \
+  --key s3-smec-vs-sme-commons
+```
+
+## Progressive Updates
+
+Use **comments** for chronological updates (timestamped, threaded):
+```bash
+bd comment mission-a1b2.1 "Account 444 also missing boundaries"
+bd comment mission-a1b2.1 "Tried SCP approach — doesn't give per-user control"
+```
+
+Use **notes** for amending the description-level summary:
+```bash
+bd note mission-a1b2 "UPDATE: Scope expanded to include prod accounts"
+```
+
+## Searching Past Knowledge
+
+```bash
+# Cross-mission lessons
+bd memories
+bd recall iam-tag-propagation
+
+# Mission-scoped knowledge
+bd search "cross-account" --status all
+bd search "IAM" --desc-contains "cross-account" --status all
+
+# All findings across all missions
+bd search "findings" --label finding --status all
+
+# Everything about arc-runners
+bd search "arc-runners" --status all --long
+
+# Terraform decisions specifically
+bd search "Decisions" --label decision --desc-contains "terraform" --status all
+
+# Find missions by domain
+bd list --type epic --status all
+```
+
+## Mission Lifecycle
+
+**Park** (pause for later):
+```bash
+# Indefinite — no specific resume date
+bd defer mission-a1b2
+bd comment mission-a1b2 "Parked: waiting for security team approval"
+
+# Time-based — surfaces automatically after the date
+bd defer mission-a1b2 --until="next monday"
+bd comment mission-a1b2 "Parked: waiting for Friday deploy window"
+```
+
+**Resume** (continue from any tool):
+```bash
+bd ready                      # See all actionable work across missions
+bd show mission-a1b2          # Review where you left off
+bd children mission-a1b2      # See all findings so far
+bd history mission-a1b2       # Execution timeline
+bd undefer mission-a1b2       # Mark as active again
+```
+
+**Reopen** (revisit completed mission):
+```bash
+bd reopen mission-a1b2
+bd comment mission-a1b2 "Reopened: team asking about tag enforcement approach"
+# ... add findings ... close again when done
+```
+
+## Landing the Plane
+
+"Landing the plane" = capturing the session's knowledge into the mission
+without necessarily closing the mission. It may be run many times over a
+mission's lifetime. Closing is a separate, later step.
+
+### Canonical land-the-plane prompt
+
+This is the one source of truth. Tools (e.g. the pi `/land` command) should
+read from this block, not duplicate it.
+
+&lt;!-- land-the-plane-prompt:begin --&gt;
+```
+LAND THE PLANE for the active mission(s): {MISSION_IDS}.
+
+Follow the missions skill (which defers to ~/Missions.md):
+1. Review this session's work and capture any findings, decisions, or actions
+   that are not yet recorded as `bd` child issues under the mission epic.
+   Use the `[finding]` / `[decision]` / `[action]` title-prefix convention.
+   Close `[finding]` and `[decision]` children immediately; leave `[action]`
+   children open if the work is not yet done.
+2. Extract any reusable lessons via `bd remember "insight" --key domain-slug`.
+3. File follow-up work as new epics if it is out of scope for the current mission.
+4. Do NOT close the mission — only update it with new knowledge from this session.
+5. Keep entries atomic, domain-labeled, and avoid duplicating what is already
+   recorded (`bd children &lt;epic-id&gt;` to check first).
+
+When finished, give a short confirmation of what you recorded.
+```
+&lt;!-- land-the-plane-prompt:end --&gt;
+
+### When to actually CLOSE a mission
+
+Only close when all of the following are true:
+
+1. All `[action]` children are closed (the work has been executed).
+2. Land-the-plane has been run at least once on this session's work.
+3. Any reusable knowledge has been captured via `bd remember`.
+4. Any out-of-scope work has been filed as a separate epic (and linked via
+   `bd link` if related).
+
+Then:
+
+```bash
+bd epic status mission-a1b2    # sanity-check completeness
+bd close mission-a1b2 --reason "Summary of what was accomplished"
+```
+
+If `bd close` refuses because `[finding]`/`[decision]` children are still
+open, that means they were created without being immediately closed (old
+habit). Mass-close them:
+
+```bash
+bd children mission-a1b2 --json \
+  | jq -r '.[] | select(.status != "closed") | select(.title | test("^\\[(finding|decision)\\]")) | .id' \
+  | xargs -n1 bd close
+```
+
+or, if you're confident no real action work is hiding, `bd close --force`.
+
+## Mission Hygiene
+
+Run periodically (or when resuming work after time away):
+
+```bash
+bd ready                  # What can I work on right now?
+bd stale --days 14        # Anything forgotten?
+bd memories               # Review cross-mission lessons
+```
+
+## Context Recovery
+
+If you've lost mission context (after compaction, clear, or session restart):
+
+```bash
+bd ready                  # What's actionable right now
+bd memories               # Cross-mission knowledge
+bd list --type epic --status all   # All missions overview
+```
+
+Use `bd show &lt;id&gt;`, `bd children &lt;id&gt;`, and `bd history &lt;id&gt;` to recover full context
+for a specific mission.
+
+## Agents (Optional)
+
+If you want to parallelize investigation, dispatch `infra-reader` (read-only) or
+`infra-executor` (approved changes) as subagents. Not required — running commands
+directly in the main session works fine for most missions.
+
+## Domain Labels
+
+Controlled vocabulary. Prefer these; extend only when a truly new domain
+appears. Consistency here is what makes `bd search --label &lt;x&gt; --status all`
+useful across missions.
+
+**Infrastructure:** `eks`, `iam`, `acm`, `awx`, `ec2`, `rds`, `s3`, `route53`, `networking`, `docker`
+**Operations:** `terraform`, `deployment`, `cost`, `security`, `monitoring`, `arc-runners`
+**Tooling:** `pi`, `claude`, `copilot`, `bd`, `vscode`, `git`
+**Knowledge type:** `finding`, `decision`, `action`
+**Work type:** `bug`, `fix`, `test`, `docs`, `ux`, `refactor`
+**Meta:** `tooling`, `process`
+
+## Security
+
+- **Never store secrets** (API keys, passwords, credentials) in mission descriptions
+- Record *what was done*, not *the credentials used to do it*
+- Mission data is plaintext in a local Dolt database — filesystem permissions only
+
+</div>
+
+<div style="font-size:13px;color:#57606a;font-style:italic;margin:0 0 56px;">That&rsquo;s the whole skill. Pair it with a working <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;font-style:normal;">bd</code> install and you&rsquo;re done.</div>
+
+<!-- ========================= § 08 INSTALL ========================= -->
+
+<a id="install"></a>
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;08</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">Installation</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 24px;">Local-first. Zero external services.</div>
+
+<!-- Plugin-users shortcut -->
+<div style="border-left:3px solid #164e3b;padding:14px 22px;margin:0 0 32px;background:#f3f6f3;">
+<div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#164e3b;margin-bottom:6px;">Already using the plugin?</div>
+<div style="color:#1f2328;font-size:14px;line-height:1.6;">If you&rsquo;re on the <code style="font-family:ui-monospace,Menlo,monospace;background:#ffffff;border:1px solid #c8dcce;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">rbro-infra-claude-skills</code> plugin, the skill ships with an automatic installer &mdash; <code style="font-family:ui-monospace,Menlo,monospace;background:#ffffff;border:1px solid #c8dcce;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">./install.sh</code> runs every step below for you. Skip to <a href="#activate-snippet" style="color:#164e3b;">the system-prompt snippet</a> at the bottom.</div>
+</div>
+
+<h3 style="font-family:Georgia,serif;font-size:19px;font-weight:600;color:#1f2328;margin:28px 0 6px;">Manual install</h3>
+<p style="margin:0 0 20px;font-size:14px;color:#57606a;">Run these yourself if you&rsquo;re setting it up standalone &mdash; nothing here is repo-specific.</p>
+
+<!-- Step 1 -->
+<div style="display:flex;gap:16px;margin:0 0 18px;">
+<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#164e3b;color:#fff;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;">1</div>
+<div style="flex-grow:1;">
+<div style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1f2328;margin-bottom:4px;">Install the Beads CLI</div>
+<div style="font-size:13.5px;color:#57606a;margin-bottom:10px;">Homebrew is the quick path; see <a href="https://github.com/steveyegge/beads" style="color:#164e3b;">the beads repo</a> for other platforms.</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.55;overflow-x:auto;white-space:pre;">brew install beads</div>
+</div>
+</div>
+
+<!-- Step 2 -->
+<div style="display:flex;gap:16px;margin:0 0 18px;">
+<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#164e3b;color:#fff;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;">2</div>
+<div style="flex-grow:1;">
+<div style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1f2328;margin-bottom:4px;">Initialize the missions database</div>
+<div style="font-size:13.5px;color:#57606a;margin-bottom:10px;">Creates a local Dolt database at <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/.missions/.beads</code>.</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.55;overflow-x:auto;white-space:pre;">mkdir -p ~/.missions
+BEADS_DIR=<span style="color:#a5d6ff;">"$HOME/.missions/.beads"</span> bd init
+git -C ~/.missions init -q
+git -C ~/.missions config beads.role maintainer   <span style="color:#8b949e;"># suppress the role warning</span></div>
+</div>
+</div>
+
+<!-- Step 3 -->
+<div style="display:flex;gap:16px;margin:0 0 18px;">
+<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#164e3b;color:#fff;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;">3</div>
+<div style="flex-grow:1;">
+<div style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1f2328;margin-bottom:4px;">Export BEADS_DIR in your shell profile</div>
+<div style="font-size:13.5px;color:#57606a;margin-bottom:10px;">So <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">bd</code> finds the database from any directory. Use <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/.bashrc</code> if you&rsquo;re on bash.</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.55;overflow-x:auto;white-space:pre;">echo <span style="color:#a5d6ff;">'export BEADS_DIR="$HOME/.missions/.beads"'</span> &gt;&gt; ~/.zshrc</div>
+</div>
+</div>
+
+<!-- Step 4 -->
+<div style="display:flex;gap:16px;margin:0 0 18px;">
+<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#164e3b;color:#fff;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;">4</div>
+<div style="flex-grow:1;">
+<div style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1f2328;margin-bottom:4px;">Drop the protocol file</div>
+<div style="font-size:13.5px;color:#57606a;margin-bottom:10px;">Save the contents of <a href="#" style="color:#164e3b;">&sect; 07 The Protocol</a> above to <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/MISSIONS.md</code>. This is the file your AI tool will read when it detects a mission phrase.</div>
+</div>
+</div>
+
+<!-- Step 5 -->
+<div style="display:flex;gap:16px;margin:0 0 32px;">
+<div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#164e3b;color:#fff;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;">5</div>
+<div style="flex-grow:1;">
+<div style="font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1f2328;margin-bottom:4px;">Verify</div>
+<div style="font-size:13.5px;color:#57606a;margin-bottom:10px;">Open a new shell so the <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">BEADS_DIR</code> export takes effect, then:</div>
+<div style="background:#1f2328;color:#e6edf3;padding:12px 16px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.55;overflow-x:auto;white-space:pre;">bd --version          <span style="color:#8b949e;"># Beads CLI is on PATH</span>
+bd list --type epic   <span style="color:#8b949e;"># Database is accessible (empty list is fine)</span></div>
+</div>
+</div>
+
+<a id="activate-snippet"></a>
+<h3 style="font-family:Georgia,serif;font-size:19px;font-weight:600;color:#1f2328;margin:28px 0 10px;">Activate in your AI tool</h3>
+
+<p style="font-size:14px;line-height:1.65;margin:0 0 14px;">Paste this into your tool&rsquo;s system prompt or global instructions (Claude Code&rsquo;s <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/.claude/CLAUDE.md</code>, or equivalent for your tool):</p>
+
+<div style="margin:0 0 20px;">
+<div style="background:#1f2328;color:#e6edf3;padding:14px 18px;border-radius:6px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre-wrap;">For infrastructure investigation and operational work, use the Mission Memory
+Protocol in ~/MISSIONS.md. Uses the `bd` CLI (Beads) for persistent,
+cross-tool mission knowledge.
+
+Activate when the user says "mission: TOPIC", "start a mission",
+"check missions", "search missions", "resume mission", or similar.
+ALWAYS read ~/MISSIONS.md before performing any mission-related actions.</div>
+</div>
+
+<p style="font-size:13.5px;line-height:1.6;color:#57606a;margin:0 0 56px;font-style:italic;">Because <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:0 5px;border-radius:3px;font-size:12.5px;color:#164e3b;font-style:normal;">bd</code> is a shell CLI and the database is a local file, any AI tool that can run bash commands can participate. Drop the same snippet into Claude Code, Copilot CLI, Pi, or Cursor &mdash; the database is shared.</p>
+
+<!-- ========================= § 09 FAQ ========================= -->
+
+<div style="display:flex;align-items:baseline;gap:16px;margin:0 0 6px;">
+<span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;letter-spacing:0.16em;color:#9aa0a6;">&sect;&nbsp;09</span>
+<h2 style="font-family:Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-0.01em;color:#1f2328;margin:0;">FAQ</h2>
+</div>
+<div style="font-family:Georgia,serif;font-size:17px;color:#57606a;font-style:italic;margin:0 0 24px;">The questions that come up every time.</div>
+
+<div style="margin:0 0 56px;">
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">Do I have to memorize any <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:14px;color:#164e3b;font-weight:400;">bd</code> commands?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">No. You speak in plain language (&ldquo;start a mission&rdquo;, &ldquo;update the mission&rdquo;, &ldquo;resume the one about arc-runners&rdquo;, &ldquo;any past missions about X?&rdquo;) and the AI handles every <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">bd</code> call for you. The commands in this article are shown for transparency; the reference lives in <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/MISSIONS.md</code>.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">Can I seed a new mission from an old one?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">Yes &mdash; this is one of the biggest wins. Say something like &ldquo;new mission, same setup as the arc one from a few weeks ago&rdquo;. The AI finds the prior mission, creates a new epic carrying forward relevant findings as starting context, and links the two so the relationship is preserved.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">What if new work relates to an old mission but isn&rsquo;t a clone?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">Branch it. Say &ldquo;new arc-runner issue &mdash; might relate to the previous mission&rdquo;. The AI opens a new mission, links it as related, and pulls forward the relevant prior domain knowledge so the new investigation starts with context instead of from scratch.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">Can I have multiple missions running at the same time?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">Yes &mdash; Beads supports any number of concurrent epics. Ask &ldquo;what missions do I have open?&rdquo; to list them, or &ldquo;resume the one about X&rdquo; to jump back into one.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">What happens if I forget to park or close a mission?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">Nothing breaks &mdash; it stays open. The AI can surface stale missions on request (&ldquo;anything I&rsquo;ve forgotten about?&rdquo;) so nothing gets permanently lost.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">Does the AI ever run infrastructure commands directly?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">Yes &mdash; the main session runs <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">kubectl</code>, <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">aws</code>, <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">terraform</code>, etc. directly. To parallelize or keep raw output out of the context window, dispatch <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">infra-reader</code> or <code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">infra-executor</code> as subagents. Optional.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">Where is the data stored?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;"><code style="font-family:ui-monospace,Menlo,monospace;background:#f6f8fa;border:1px solid #d0d7de;padding:1px 5px;border-radius:3px;font-size:12.5px;color:#164e3b;">~/.missions/.beads</code> &mdash; a local Dolt database. It never leaves your machine. Back it up like any other directory.</div>
+</div>
+
+<div style="padding:18px 0;border-top:1px solid #d0d7de;border-bottom:1px solid #d0d7de;">
+<div style="font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1f2328;margin-bottom:8px;">How do lessons differ from findings?</div>
+<div style="font-size:14px;line-height:1.65;color:#57606a;">Findings are <em>mission-scoped</em> &mdash; facts discovered during one investigation. Lessons are <em>cross-mission</em> &mdash; reusable insights that should inform every future session. The AI promotes findings into lessons when a mission closes.</div>
+</div>
+
+</div>
+
+<!-- ========================= FOOTER ========================= -->
+
+<div style="text-align:center;padding:28px 0;border-top:1px solid #d0d7de;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9aa0a6;">
+End of manual &nbsp;&middot;&nbsp; rbro-infra-claude-skills &nbsp;&middot;&nbsp; Mission Memory Protocol
+</div>
+
+</div>
+</div>
