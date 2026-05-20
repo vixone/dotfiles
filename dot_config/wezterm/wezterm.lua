@@ -469,6 +469,7 @@ config.mouse_bindings = {
 		mods = "CMD",
 		action = act.Nop,
 	},
+
 }
 
 -- Pre-build static hint elements (computed once per config load)

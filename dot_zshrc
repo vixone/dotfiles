@@ -233,3 +233,11 @@ chezsync() {
   chezmoi git commit -- -m "${1:-update dotfiles}"
   chezmoi git push
 }
+
+# Beads mission memory database
+export BEADS_DIR="$HOME/.missions/.beads"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/t026chirv/.lmstudio/bin"
+# End of LM Studio CLI section
+

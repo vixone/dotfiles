@@ -6,12 +6,11 @@ All unchecked tasks from your daily notes. Click the note link to jump to the or
 
 ## Todo
 
-- [ ] use db in apps shared for storing jobful data  → [[27-march]]
-- [ ] use api in it apps prod and deploy lambda also there but write in apps shared commons pg database → [[27-march]]
+- [ ] add overtime after oncall week 2 (current week 1) → [[20-april]]
 
 ## Quick Ideas
 
 *No unchecked ideas*
 
 ---
-*Generated: 2026-04-14 17:44*
+*Generated: 2026-05-11 09:16*
