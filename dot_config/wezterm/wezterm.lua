@@ -115,6 +115,7 @@ local themes = {
 local theme = themes[mode]
 
 -- ─── FONTS ─────────────────────────────────────────────────────────
+config.font_dirs = { wezterm.home_dir .. "/Library/Fonts" }
 config.font = wezterm.font("RobotoMono Nerd Font Mono")
 config.font_size = 16.0
 

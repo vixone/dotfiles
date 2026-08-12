@@ -3,9 +3,9 @@
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-alias python3='python3.13'
-alias pip3='pip3.13'
+export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+alias python3='python3.14'
+alias pip3='pip3.14'
 
 # Disable oh-my-zsh theme — using Starship prompt instead
 ZSH_THEME=""
@@ -84,6 +84,13 @@ gitcleanup() {
 markd() { glow "$@"; }
 alias k=kubectl
 kns() { kubectl config set-context --current --namespace "$1"; }
+certinfo() {
+  local target="$1"
+  if [[ ! "$target" =~ ":" ]]; then
+    target="${target}:443"
+  fi
+  openssl s_client -connect "$target" -showcerts </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
+}
 
 export PATH=/Users/t026chirv/.local/bin:$PATH
 
@@ -241,3 +248,6 @@ export BEADS_DIR="$HOME/.missions/.beads"
 export PATH="$PATH:/Users/t026chirv/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+# Rust / cargo (installed via rustup)
+. "$HOME/.cargo/env"
