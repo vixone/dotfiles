@@ -1,0 +1,10 @@
+[
+ {"source":"implement-direct/eval-1-simple-fix","expect":"one approved rate-limit task; reset calculation before remaining count; boundary test; no plan artifacts"},
+ {"source":"implement-direct/eval-2-decompose-limit","expect":"four auth/session/password/email components exceed direct limit; no dispatch or live SES"},
+ {"source":"implement-direct/eval-3-freeform-brief","expect":"explicit approved import into bound descriptor; external brief unchanged"},
+ {"source":"implement-direct/eval-7-sequential-deps","expect":"ActivityQuery verified before ExportController; CSV header-only empty output and streaming contract"},
+ {"source":"implement-incremental/eval-1-happy-path","expect":"notification entity, API, delivery phases; phase receipts required"},
+ {"source":"implement-incremental/eval-2-resume","expect":"verified entity/scaffold skipped; interrupted validation middleware reconciled"},
+ {"source":"implement-incremental/eval-3-parallel-tasks","expect":"independent controller/adapter bounded concurrency; validation depends on both receipts; no live Stripe"},
+ {"source":"implement-incremental/eval-6-no-plan","expect":"missing approved phase context blocks; status endpoint does not imply Direct"}
+]

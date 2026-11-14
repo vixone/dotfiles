@@ -1,0 +1,5 @@
+node_modules/
+.pi/sdd/
+release/
+*.tsbuildinfo
+.DS_Store

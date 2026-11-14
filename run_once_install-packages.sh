@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# Dotfile package hooks are macOS-only. Pi core uses bootstrap.sh separately.
+[[ "$(uname -s)" == Darwin ]] || exit 0
+
 # 1. Install Homebrew
 if ! command -v brew &>/dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

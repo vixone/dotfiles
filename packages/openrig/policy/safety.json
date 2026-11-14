@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "tools": [
+    "bash",
+    "fs_list",
+    "fs_read",
+    "fs_search",
+    "fs_write",
+    "fs_edit",
+    "git",
+    "github",
+    "team",
+    "mission",
+    "scope",
+    "memory"
+  ],
+  "workspace": "workspace",
+  "repos": {},
+  "readOnlyRoots": {
+    "artifacts": "~/.missions/artifacts",
+    "seat-recaps": "~/.devrig/openrig-home/topology/rigs/devrig/seats"
+  },
+  "controlRoot": "~/.devrig/control",
+  "binaries": {
+    "git": "/opt/homebrew/bin/git",
+    "gh": "/opt/homebrew/bin/gh",
+    "rg": "/opt/homebrew/bin/rg",
+    "mx": "~/.local/bin/mx"
+  },
+  "childPath": [
+    "/opt/homebrew/bin",
+    "/usr/bin",
+    "/bin",
+    "/usr/sbin",
+    "/sbin"
+  ],
+  "deny": {
+    "pathSegments": [
+      ".git",
+      ".ssh",
+      ".aws",
+      ".kube",
+      ".gnupg",
+      ".pi",
+      ".devrig",
+      ".openrig",
+      ".terraform"
+    ],
+    "fileNames": [
+      ".env",
+      ".netrc",
+      ".npmrc",
+      ".pypirc",
+      ".git-credentials",
+      "id_rsa",
+      "id_ecdsa",
+      "id_ed25519",
+      "kubeconfig",
+      "credentials",
+      "auth.json"
+    ],
+    "fileNamePrefixes": [
+      ".env."
+    ],
+    "suffixes": [
+      ".pem",
+      ".key",
+      ".p12",
+      ".pfx",
+      ".jks",
+      ".keystore",
+      ".kdbx",
+      ".tfstate",
+      ".tfstate.backup",
+      ".crt.key"
+    ]
+  },
+  "limits": {
+    "readBytes": 11264,
+    "readLines": 2000,
+    "outputBytes": 51200,
+    "writeBytes": 1048576,
+    "commandTimeoutSeconds": 120,
+    "listEntries": 500,
+    "searchMatches": 200
+  },
+  "git": {
+    "pushBranchPattern": "^(feature|bugfix)/[A-Za-z0-9][A-Za-z0-9._/-]{0,100}$",
+    "remotePattern": "^git@github\\.com:vixone/[A-Za-z0-9._-]+$",
+    "subjectMaxLength": 50,
+    "forbiddenCommitPatterns": [
+      "\u2014",
+      "co-authored-by",
+      "generated with",
+      "claude",
+      "gpt",
+      "copilot",
+      "openai",
+      "anthropic",
+      "\\bai\\b",
+      "\\bllm\\b"
+    ]
+  },
+  "github": {
+    "host": "github.com",
+    "owner": "vixone"
+  },
+  "context": {
+    "warnTokens": 150000,
+    "hardCompactTokens": 250000,
+    "steerAgainTokens": 200000,
+    "keepRecentTokens": 20000,
+    "instructionsFile": "policy/handover.md"
+  },
+  "results": {
+    "capBytes": 12288,
+    "leadCapBytes": 32768,
+    "uncapped": []
+  },
+  "bash": {
+    "denyHomePaths": [
+      ".aws",
+      ".kube",
+      ".ssh",
+      ".gnupg",
+      ".docker",
+      ".azure",
+      ".terraform.d",
+      ".pi",
+      ".devrig",
+      ".openrig",
+      ".claude",
+      ".codex",
+      ".copilot",
+      ".config/gh",
+      ".config/gcloud",
+      ".config/github-copilot",
+      "Library",
+      ".zshrc.local",
+      ".netrc",
+      ".git-credentials",
+      ".npmrc",
+      ".pypirc",
+      ".vault-token",
+      ".cargo/credentials",
+      ".cargo/credentials.toml",
+      ".zsh_history",
+      ".bash_history"
+    ],
+    "writableRepos": [],
+    "allowUnixSockets": [
+      "/private/var/run/mDNSResponder"
+    ],
+    "denyMachServices": [
+      "com.apple.SecurityServer",
+      "com.apple.securityd.xpc",
+      "com.apple.trustd",
+      "com.apple.trustd.agent",
+      "com.apple.coreservices.appleevents",
+      "com.apple.coreservices.launchservicesd",
+      "com.apple.pasteboard.1"
+    ]
+  },
+  "rig": {
+    "name": "devrig",
+    "seats": {
+      "dev-lead": "architect",
+      "dev-expert1": "expert",
+      "dev-expert2": "expert"
+    }
+  },
+  "roles": {
+    "architect": {
+      "posture": "operator",
+      "prompt": "context/lead-brief.md",
+      "tools": [
+        "team",
+        "mission",
+        "scope"
+      ],
+      "teamOps": [
+        "send",
+        "queue_create",
+        "queue_claim",
+        "queue_update",
+        "queue_handoff_complete",
+        "queue_list",
+        "queue_show",
+        "whoami"
+      ],
+      "missionOps": [
+        "brief",
+        "show",
+        "children",
+        "ready",
+        "note",
+        "comment",
+        "create",
+        "close"
+      ],
+      "scopeOps": [
+        "audit",
+        "mission_ls",
+        "mission_show",
+        "mission_create",
+        "mission_progress",
+        "mission_approve_spec",
+        "slice_ls",
+        "slice_show",
+        "slice_create",
+        "slice_progress",
+        "slice_close",
+        "slice_approve_spec"
+      ],
+      "autoFresh": {
+        "seats": [
+          "dev-expert1",
+          "dev-expert2"
+        ],
+        "idleSeconds": 60,
+        "pollSeconds": 30,
+        "assignBlankTokens": 100000,
+        "steeredIdleSeconds": 10
+      },
+      "idleAlarm": {
+        "seats": [
+          "dev-expert1",
+          "dev-expert2"
+        ],
+        "idleSeconds": 120,
+        "repeatSeconds": 120,
+        "pollSeconds": 10
+      },
+      "operatorAlert": {
+        "pollSeconds": 15,
+        "repeatSeconds": 600
+      }
+    },
+    "expert": {
+      "prompt": "context/expert-brief.md",
+      "tools": [
+        "bash",
+        "fs_list",
+        "fs_read",
+        "fs_search",
+        "fs_write",
+        "fs_edit",
+        "git",
+        "github",
+        "team",
+        "mission",
+        "scope",
+        "memory"
+      ],
+      "teamOps": [
+        "send",
+        "queue_claim",
+        "queue_update",
+        "queue_handoff_complete",
+        "queue_list",
+        "queue_show",
+        "whoami"
+      ],
+      "missionOps": [
+        "brief",
+        "show",
+        "children",
+        "ready"
+      ],
+      "scopeOps": [
+        "audit",
+        "mission_ls",
+        "mission_show",
+        "slice_ls",
+        "slice_show",
+        "slice_progress"
+      ],
+      "ui": true
+    }
+  },
+  "mission": {
+    "db": "~/.missions/mx.db"
+  },
+  "memory": {
+    "server": "~/.pi/bin/memory-server",
+    "db": "~/.pi/state/memory.db",
+    "modelDir": "~/.pi/state/models"
+  },
+  "prompts": {
+    "writingStyle": "context/writing-style.md"
+  },
+  "scope": {
+    "root": "workspace/project"
+  },
+  "seatUi": {
+    "extensions": [
+      "../mission-stack/modules/guards/extensions/guards/index.ts",
+      "../mission-stack/modules/bar/extensions/pi-bar/index.ts"
+    ],
+    "skills": [
+      "../mission-stack/modules/harness/skills/unslop",
+      "../mission-stack/modules/harness/skills/typescript-best-practices"
+    ],
+    "themes": [],
+    "settings": [
+      "hideThinkingBlock"
+    ]
+  }
+}

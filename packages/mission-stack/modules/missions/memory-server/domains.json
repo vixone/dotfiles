@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "domains": [
+    { "prefix": "eks-", "domain": "eks" },
+    { "prefix": "terraform-", "domain": "terraform" },
+    { "prefix": "tf-", "domain": "terraform" },
+    { "prefix": "karpenter-", "domain": "karpenter" },
+    { "prefix": "aurora-", "domain": "aurora" },
+    { "prefix": "iam-", "domain": "iam" },
+    { "prefix": "pi-", "domain": "pi" },
+    { "prefix": "git-", "domain": "git" },
+    { "prefix": "bd-", "domain": "bd" },
+    { "prefix": "memory-", "domain": "memory" },
+    { "prefix": "mq-", "domain": "mq" },
+    { "prefix": "artifactory-", "domain": "artifactory" },
+    { "prefix": "github-", "domain": "github" },
+    { "prefix": "aws-", "domain": "aws" }
+  ]
+}

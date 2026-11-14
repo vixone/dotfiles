@@ -1,0 +1,23 @@
+{
+  "name": "personal-openrig",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Optional macOS coding team on Pi and OpenRig",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18 <23"
+  },
+  "scripts": {
+    "test": "bin/devrig-node --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "1.5.2",
+    "typebox": "^1.4.3",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}

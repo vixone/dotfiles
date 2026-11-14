@@ -1,0 +1,552 @@
+#!/bin/sh
+# Operator entry point for the personal coding rig. Runs the repo-local OpenRig CLI with a private
+# HOME, OPENRIG_HOME and tmux socket under ~/.devrig. Your ~/.openrig and ~/.tmux.conf stay untouched.
+# No kernel is started. One daemon, tmux server and Herdr serve every rig.
+# --rig <name> or DEVRIG_RIG selects the rig, default devrig. start and stop require --rig.
+#
+#   devrig [--rig <name>] <command> ...
+#   devrig --rig <name> start  start daemon, seats and a Herdr tab (rig-start)
+#   devrig --rig <name> stop [--force]  stop seats, then Herdr and daemon once no other rig runs
+#                              refuses while a seat is mid-turn unless --force (rig-stop)
+#   devrig provision         create ~/.devrig and render the rig's spec
+#   devrig new <name> [--like <rig>]  scaffold rigs/<name> from a rig (default devrig); then
+#                              `devrig --rig <name> up`
+#   devrig daemon start      start the daemon (no kernel); also: stop | status | logs
+#   devrig up                first launch of the seats from the rendered spec
+#   devrig resume            bring stopped seats back with their conversations
+#   devrig terminal          show the seats as Herdr tiles (starts Herdr in a new WezTerm tab if needed)
+#   devrig tui               the OpenRig TUI in a Herdr space; its "Open terminal" then opens in this Herdr
+#   devrig attach [member]   attach one seat (lead, expert1, expert2; default lead) with plain tmux in a new WezTerm tab
+# fresh, attach and add also take the seat as dev-<member>@<rig>, which selects the rig. Typed at a terminal,
+# fresh, attach, add and down refuse to default while another rig has seats up.
+#   devrig fresh <member> [--saved | --blank]  restart an expert seat on a fresh conversation primed from its own
+#                              handover; --saved reuses one a /fresh in the seat wrote in the last hour; --blank starts
+#                              without one, for new work (the seat must have no in-progress rows)
+#   devrig add <member>      add a member of the rendered spec to the running rig without a rebuild
+#   devrig down              stop this rig's seats
+#   devrig rig <args...>     any other rig command with the private environment
+#   devrig herdr <args...>   the herdr CLI against the rig's Herdr server
+#   devrig project [snapshot [message] | <git args>]  version the rig's project tree (git dir in ~/.devrig)
+#   devrig link              symlink rig, rig-start, rig-stop and devrig in ~/.local/bin to this script
+# Invoked through a symlink named rig, `rig <args>` is `devrig rig <args>`; rig-start and rig-stop are
+# `devrig start` and `devrig stop` (OpenRig's own `rig start` stays as it is).
+set -eu
+self=$(/usr/bin/readlink -f "$0")
+rig_sel=${DEVRIG_RIG:-}
+rig_flag=
+if [ "${1:-}" = --rig ]; then
+  case "${2:-}" in "" | -*) echo "devrig: --rig needs a rig name" >&2 && exit 2 ;; esac
+  rig_sel=$2
+  rig_flag=$2
+  shift 2
+fi
+case "$(/usr/bin/basename "$0")" in
+  rig) set -- rig "$@" ;;
+  rig-start) set -- start "$@" ;;
+  rig-stop) set -- stop "$@" ;;
+esac
+# A seat command can name the seat as OpenRig does, dev-<member>@<rig> (or <member>@<rig>): the suffix picks the rig.
+case "${1:-}:${2:-}" in
+  fresh:*@* | attach:*@* | add:*@*)
+    seat_rig=${2##*@}
+    seat_member=${2%@*}
+    seat_member=${seat_member#dev-}
+    case "$seat_rig:$seat_member" in
+      *[!a-z0-9:-]* | :* | *: | *@*) echo "devrig: seat must be dev-<member>@<rig>, got $2" >&2 && exit 2 ;;
+    esac
+    if [ -n "$rig_flag" ] && [ "$rig_flag" != "$seat_rig" ]; then
+      echo "devrig: --rig $rig_flag does not match seat $2" >&2 && exit 2
+    fi
+    rig_sel=$seat_rig
+    rig_flag=$seat_rig
+    seat_cmd=$1
+    shift 2
+    set -- "$seat_cmd" "$seat_member" "$@"
+    ;;
+esac
+root=$(cd "$(dirname "$self")/.." && pwd -P)
+node="$root/.runtime/node/node_modules/node/bin/node"
+cli="$root/.runtime/openrig/node_modules/@openrig/cli/dist/bin-wrapper.js"
+# Account home from the password database, not $HOME.
+acct_home=$("$node" -p 'require("node:os").userInfo().homedir')
+state="$acct_home/.devrig"
+# rig_name, rig_template, rig_spec, rig_control, rig_workspace, rig_project, rig_project_git, rig_recaps: derived
+# from the rig's policy by src/rig-env.ts, the same code the seats load.
+rig_env() {
+  "$node" --disable-warning=ExperimentalWarning "$root/src/rig-env.ts" "$@"
+}
+rig_vars=$(rig_env env ${rig_sel:+"$rig_sel"}) || exit 2
+eval "$rig_vars"
+spec=$rig_spec
+# Re-invocations of "$self" (start runs daemon start and resume) act on the same rig.
+DEVRIG_RIG=$rig_name
+export DEVRIG_RIG
+tmux_bin=/opt/homebrew/bin/tmux
+herdr_bin=/opt/homebrew/bin/herdr
+seat_path="$root/bin/seat:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+die() {
+  echo "devrig: $*" >&2
+  exit 2
+}
+
+provision() {
+  umask 077
+  mkdir -p "$state/daemon-home" "$state/openrig-home/community-harnesses" "$state/tmux" "$rig_control"
+  chmod 700 "$state" "$state/daemon-home" "$state/openrig-home" "$state/tmux" "$rig_control"
+  for f in policy/operating-policy.md context/coding-reference.md context/lead-brief.md context/expert-brief.md policy/handover.md rig/pi-tui.yaml rig/tmux.conf; do
+    [ -f "$root/$f" ] || die "missing $f"
+  done
+  [ -f "$rig_template" ] || die "missing $rig_template"
+  rig_env render ${rig_sel:+"$rig_sel"} > /dev/null || die "could not render $spec"
+  cp "$root/rig/pi-tui.yaml" "$state/openrig-home/community-harnesses/pi-tui.yaml"
+  # OpenRig keeps each seat's RECAP here; seats read it through their seat-recaps root.
+  mkdir -p "$rig_recaps"
+  cp "$root/rig/tmux.conf" "$state/daemon-home/.tmux.conf"
+  # A running rig tmux server picks the config up now; a new one reads it at start.
+  if TMUX_TMPDIR="$state/tmux" "$tmux_bin" list-sessions > /dev/null 2>&1; then
+    TMUX_TMPDIR="$state/tmux" "$tmux_bin" source-file "$state/daemon-home/.tmux.conf"
+  fi
+  # The OpenRig project tree (missions, slices) lives in the rig workspace, where the seats' fs and scope tools
+  # reach it. init-workspace only adds missing files. The instance-wide workspace.root stays the base rig's;
+  # other rigs' scope tools pass their own tree as --workspace.
+  project=$rig_project
+  mkdir -p "$project"
+  if [ "$rig_template" = "$root/rig/rig.template.yaml" ] && [ "$(run_rig config get workspace.root)" != "$project" ]; then
+    run_rig config set workspace.root "$project" > /dev/null
+  fi
+  run_rig config init-workspace --root "$project" > /dev/null
+  echo "rendered $spec, installed the pi-tui harness preset and tmux.conf, project tree at $project"
+}
+
+# Runs a command with the rig's private environment. Leading NAME=value arguments add variables.
+# Forward Herdr's pane markers only from a pane of the rig's own Herdr, never from the operator's.
+herdr_pass=
+if [ "${HERDR_ENV:-}" = 1 ] && [ -n "${HERDR_PANE_ID:-}" ] && [ "${HERDR_SOCKET_PATH:-}" = "$state/daemon-home/.config/herdr/herdr.sock" ]; then
+  herdr_pass=1
+fi
+run_private() {
+  /usr/bin/env -i \
+    HOME="$state/daemon-home" \
+    OPENRIG_HOME="$state/openrig-home" \
+    TMUX_TMPDIR="$state/tmux" \
+    PATH="$seat_path" \
+    DEVRIG_RIG_PATH="$seat_path" \
+    ZDOTDIR="$root/shell" \
+    SHELL=/bin/zsh \
+    USER="${USER:-$(/usr/bin/id -un)}" \
+    LOGNAME="${LOGNAME:-$(/usr/bin/id -un)}" \
+    LANG="${LANG:-en_US.UTF-8}" \
+    TERM="${TERM:-xterm-256color}" \
+    TMPDIR="${TMPDIR:-/tmp}" \
+    ${SSH_AUTH_SOCK:+SSH_AUTH_SOCK="$SSH_AUTH_SOCK"} \
+    ${TERM_PROGRAM:+TERM_PROGRAM="$TERM_PROGRAM"} \
+    ${__CFBundleIdentifier:+__CFBundleIdentifier="$__CFBundleIdentifier"} \
+    ${herdr_pass:+HERDR_ENV=1 HERDR_PANE_ID="$HERDR_PANE_ID" HERDR_SOCKET_PATH="$HERDR_SOCKET_PATH"} \
+    NODE_USE_SYSTEM_CA=1 \
+    OPENRIG_NO_KERNEL=1 \
+    OPENRIG_BIND_HOST=127.0.0.1 \
+    "$@"
+}
+
+run_rig() {
+  [ -d "$state/openrig-home" ] || die "run 'devrig provision' first"
+  run_private "$node" "$cli" "$@"
+}
+
+# The daemon's HOME is daemon-home, so it looks for Herdr on daemon-home/.config/herdr/herdr.sock.
+herdr_cli() {
+  run_private "$herdr_bin" "$@"
+}
+
+herdr_alive() {
+  herdr_cli status server 2> /dev/null | /usr/bin/grep -q '^status: running'
+}
+
+# Herdr workspace ids, oldest first; with a view name, only its workspaces (OpenRig adds " (2)" and so on to repeats).
+# The WezTerm pane showing the rig's Herdr, found by the tab title this script sets.
+herdr_tab_pane() {
+  wezterm cli list --format json | "$node" -e '
+    let t = ""; process.stdin.on("data", (c) => { t += c; }).on("end", () => {
+      const p = JSON.parse(t).find((x) => x.tab_title === "devrig herdr"); if (p) console.log(p.pane_id);
+    });'
+}
+# Make the rig's Herdr visible in a WezTerm tab of the current window: start the server there, or attach a
+# client tab when the server runs without one. Sets fresh=1 when it started the server, and herdr_pane.
+herdr_view() {
+  command -v wezterm > /dev/null || die "wezterm not found"
+  fresh=0
+  herdr_pane=$(herdr_tab_pane)
+  if herdr_alive; then
+    [ -n "$herdr_pane" ] && return 0
+  else
+    fresh=1
+  fi
+  herdr_pane=$(wezterm cli spawn --cwd "$root" -- "$self" herdr) || die "wezterm cli spawn failed"
+  wezterm cli set-tab-title --pane-id "$herdr_pane" "devrig herdr" 2> /dev/null || true
+  i=0
+  until herdr_alive; do
+    i=$((i + 1))
+    [ "$i" -lt 30 ] || die "Herdr did not start; check WezTerm pane $herdr_pane"
+    sleep 0.5
+  done
+}
+herdr_workspaces() {
+  herdr_cli workspace list | "$node" -e '
+    const n = process.argv[1]; let t = ""; process.stdin.on("data", (c) => { t += c; }).on("end", () => {
+      for (const w of JSON.parse(t).result.workspaces) if (!n || w.label === n || w.label.startsWith(`${n} (`)) console.log(w.workspace_id);
+    });' "${1:-}"
+}
+
+daemon_up() {
+  run_rig daemon status 2> /dev/null | /usr/bin/grep -q '^Daemon running'
+}
+# tmux session names of the shared server, one per seat: <pod>-<member>@<rig>.
+rig_sessions() {
+  TMUX_TMPDIR="$state/tmux" "$tmux_bin" list-sessions -F '#{session_name}' 2> /dev/null || true
+}
+seats_up() {
+  rig_sessions | /usr/bin/grep -q "@$rig_name\$"
+}
+# Any seat of another rig: Herdr and daemon then stay up.
+other_rigs_up() {
+  rig_sessions | /usr/bin/grep '@' | /usr/bin/grep -vq "@$rig_name\$"
+}
+
+# start and stop act on the rig named with --rig only, never on DEVRIG_RIG or the default.
+need_rig_flag() {
+  [ -n "$rig_flag" ] && return 0
+  base=$(rig_env env | /usr/bin/sed -n "s/^rig_name='\\(.*\\)'$/\\1/p")
+  rigs=$(/bin/ls "$root/rigs" 2> /dev/null | /usr/bin/tr '\n' ' ')
+  die "name the rig: rig-$1 --rig <name> (or devrig --rig <name> $1); rigs: $base $rigs"
+}
+# A seat command typed at a terminal names its rig when another rig has seats up; the default would act on
+# the base rig's seats. Callers without a terminal (the lead's auto-fresh) pass --rig themselves.
+need_rig_choice() {
+  [ -n "$rig_sel" ] && return 0
+  [ -t 0 ] || return 0
+  other_rigs_up || return 0
+  up=$(rig_sessions | /usr/bin/sed -n 's/^.*@//p' | /usr/bin/sort -u | /usr/bin/tr '\n' ' ')
+  die "several rigs are up (${up% }); name the seat, e.g. devrig $1 dev-${2:-<member>}@<rig>, or use devrig --rig <rig> $*"
+}
+# A rig the daemon has never seen has no seats to resume; start launches it with up.
+rig_known() {
+  run_rig ps --rig "$rig_name" --include-archived --json | /usr/bin/grep -q '"rigName"'
+}
+
+cmd=${1:-}
+[ "$#" -gt 0 ] && shift
+case "$cmd" in
+  provision) provision ;;
+  start)
+    [ "$#" -eq 0 ] || die "usage: devrig --rig <name> start"
+    need_rig_flag start
+    if daemon_up; then echo "daemon already running"; else "$self" daemon start; fi
+    if seats_up; then
+      echo "seats already running"
+    elif rig_known; then
+      "$self" resume
+    else
+      echo "first launch of $rig_name"
+      "$self" up
+    fi
+    # Herdr keeps a workspace across a seat or server restart, but its tiles come back as plain shells.
+    # Replace the rig's old view instead of showing it.
+    if herdr_alive; then for id in $(herdr_workspaces "$rig_name"); do herdr_cli workspace close "$id" > /dev/null; done; fi
+    "$self" terminal
+    ;;
+  stop)
+    need_rig_flag stop
+    force=0
+    case "${1:-}" in
+      --force) force=1 ;;
+      "") ;;
+      *) die "usage: devrig --rig <name> stop [--force]" ;;
+    esac
+    if seats_up; then
+      busy=$(DEVRIG_RIG="$rig_name" "$node" --disable-warning=ExperimentalWarning "$root/src/rig-busy.ts" "$root") || {
+        [ -n "$busy" ] || die "could not check for running work; nothing stopped"
+        printf '%s\n' "$busy" >&2
+        [ "$force" = 1 ] || die "not stopping; wait for it to finish, or rig-stop --rig $rig_name --force"
+        echo "stopping anyway (--force)"
+      }
+      run_rig down "$rig_name"
+    else
+      echo "seats not running"
+    fi
+    # This rig's Herdr view goes either way; a kept one would come back as plain shells.
+    if herdr_alive; then for id in $(herdr_workspaces "$rig_name"); do herdr_cli workspace close "$id" > /dev/null; done; fi
+    if other_rigs_up; then
+      echo "other rigs still run; Herdr and daemon stay up"
+      exit 0
+    fi
+    if herdr_alive; then herdr_cli server stop > /dev/null && echo "herdr stopped"; else echo "herdr not running"; fi
+    if daemon_up; then run_rig daemon stop; else echo "daemon not running"; fi
+    ;;
+  daemon)
+    sub=${1:-status}
+    [ "$#" -gt 0 ] && shift
+    case "$sub" in
+      # Loopback only: default mode also binds a detected VPN/Tailscale interface.
+      start) run_rig daemon start --no-kernel --host 127.0.0.1 "$@" ;;
+      stop | status | logs) run_rig daemon "$sub" "$@" ;;
+      *) die "daemon start|stop|status|logs" ;;
+    esac
+    ;;
+  up)
+    provision
+    run_rig up "$spec" "$@"
+    ;;
+  resume)
+    run_rig up "$rig_name" --existing "$@"
+    ;;
+  terminal)
+    # New tab in the current WezTerm window, never a new window. Each call adds a Herdr workspace.
+    herdr_view
+    before=$(herdr_workspaces)
+    # OpenRig exits non-zero when Herdr cannot confirm the tiles, though they usually attach; arrange them anyway.
+    run_rig terminal open "$rig_name" --provider herdr || echo "devrig: terminal open reported problems (above); arranging the view anyway" >&2
+    # A fresh Herdr starts with a plain shell workspace under the rig's private HOME; close it.
+    if [ "$fresh" = 1 ]; then
+      for id in $before; do herdr_cli workspace close "$id" > /dev/null; done
+    fi
+    ws=$(herdr_workspaces "$rig_name" | /usr/bin/tail -n 1)
+    if [ -n "$ws" ]; then
+      "$node" --disable-warning=ExperimentalWarning "$root/src/herdr-arrange.ts" "$self" "$ws" || true
+      herdr_cli workspace focus "$ws" > /dev/null
+    fi
+    wezterm cli activate-pane --pane-id "$herdr_pane" 2> /dev/null || true
+    ;;
+  tui)
+    # Inside a Herdr pane on the rig's socket, OpenRig places "Open terminal" views in that Herdr instead of
+    # Terminal.app (it knows only Ghostty and Terminal on macOS). One "rig tui" space, reused.
+    if [ -n "$herdr_pass" ]; then
+      run_rig tui
+      exit
+    fi
+    herdr_view
+    before=$(herdr_workspaces)
+    ws=$(herdr_workspaces "rig tui" | /usr/bin/tail -n 1)
+    if [ -z "$ws" ]; then
+      created=$(herdr_cli workspace create --label "rig tui" --cwd "$root" --focus)
+      ws=$(printf '%s' "$created" | "$node" -e 'let t = ""; process.stdin.on("data", (c) => { t += c; }).on("end", () => console.log(JSON.parse(t).result.workspace.workspace_id));')
+      tpane=$(printf '%s' "$created" | "$node" -e 'let t = ""; process.stdin.on("data", (c) => { t += c; }).on("end", () => console.log(JSON.parse(t).result.root_pane.pane_id));')
+      herdr_cli pane run "$tpane" "exec $self rig tui" > /dev/null
+    fi
+    if [ "$fresh" = 1 ]; then
+      for id in $before; do herdr_cli workspace close "$id" > /dev/null; done
+    fi
+    herdr_cli workspace focus "$ws" > /dev/null
+    wezterm cli activate-pane --pane-id "$herdr_pane" 2> /dev/null || true
+    echo "OpenRig TUI in Herdr space $ws (WezTerm tab devrig herdr)"
+    ;;
+  herdr)
+    if [ "$#" -eq 0 ]; then
+      # The Herdr server and client that the terminal tab runs, with the rig's private HOME.
+      run_private HERDR_CONFIG_PATH="$root/rig/herdr.toml" "$herdr_bin"
+    else
+      herdr_cli "$@"
+    fi
+    ;;
+  link)
+    bin_dir="$acct_home/.local/bin"
+    mkdir -p "$bin_dir"
+    for name in rig rig-start rig-stop devrig; do
+      link="$bin_dir/$name"
+      if [ -e "$link" ] && [ ! -L "$link" ]; then die "$link exists and is not a symlink; not touching it"; fi
+      ln -sfn "$self" "$link"
+      echo "$link -> $self"
+    done
+    ;;
+  attach)
+    need_rig_choice attach "$@"
+    # New tab in the current WezTerm window, never a new window.
+    command -v wezterm > /dev/null || die "wezterm not found"
+    member=${1:-lead}
+    case "$member" in "" | *[!a-z0-9]*) die "member must be lead, expert1 or expert2" ;; esac
+    seat_session="dev-$member@$rig_name"
+    TMUX_TMPDIR="$state/tmux" "$tmux_bin" has-session -t "=$seat_session" 2> /dev/null \
+      || die "seat $seat_session is not running (devrig up | resume)"
+    pane=$(wezterm cli spawn --cwd "$root" -- /usr/bin/env TMUX_TMPDIR="$state/tmux" \
+      "$tmux_bin" attach-session -t "=$seat_session") || die "wezterm cli spawn failed"
+    wezterm cli set-tab-title --pane-id "$pane" "$seat_session" 2> /dev/null || true
+    echo "opened WezTerm tab (pane $pane) on $seat_session"
+    ;;
+  fresh)
+    # A locked seat has no /continue. /fresh (rig extension, src/fresh.ts) has the seat write its handover to
+    # <seat root>/fresh/recap.md; this files it as the seat's OpenRig RECAP and starts a fresh occupant in the same
+    # seat (`rig seat launch --fresh --stop`, which names and binds the new conversation). --blank skips the handover
+    # for a seat moving to new work. The priming goes in as a mode word in <seat root>/fresh/prime; the launcher
+    # (src/seat.ts prepare-tui) turns it into the first line of the new conversation's first input, ahead of
+    # OpenRig's startup turn. Not `rig seat handover --source rebuild`: OpenRig 0.7.7 has no successor adapter for
+    # community harnesses and fails only after it has respawned the pane.
+    need_rig_choice fresh "$@"
+    member=${1:-}
+    [ "$#" -gt 0 ] && shift
+    mode=handover
+    case "${1:-}" in
+      --saved) mode=saved ;;
+      --blank) mode=blank ;;
+      "") ;;
+      *) die "usage: devrig fresh <member> [--saved | --blank]" ;;
+    esac
+    [ "$#" -le 1 ] || die "usage: devrig fresh <member> [--saved | --blank]"
+    case "$member" in
+      lead) die "the lead runs the operator's Pi; use /continue in its pane" ;;
+      "" | *[!a-z0-9]*) die "usage: devrig fresh <member> [--saved | --blank] (expert1, expert2)" ;;
+    esac
+    seat_session="dev-$member@$rig_name"
+    TMUX_TMPDIR="$state/tmux" "$tmux_bin" has-session -t "=$seat_session" 2> /dev/null \
+      || die "seat $seat_session is not running (devrig up | resume)"
+    fresh_dir="$state/openrig-home/state/pi-tui/$seat_session/fresh"
+    recap="$rig_recaps/dev-$member/RECAP.md"
+    timeout=${DEVRIG_FRESH_TIMEOUT:-900}
+    case "$timeout" in "" | *[!0-9]*) die "DEVRIG_FRESH_TIMEOUT must be whole seconds" ;; esac
+    case "$mode" in
+      blank)
+        # Without a handover, open work would be lost; the seat must have handed its rows back.
+        open=$(run_rig queue list --destination "$seat_session" --state in-progress,blocked --json) \
+          || die "could not list $seat_session's queue; the seat is unchanged"
+        n=$(printf '%s' "$open" | /usr/bin/grep -o '"qitemId"' | /usr/bin/wc -l | /usr/bin/tr -d ' ')
+        [ "$n" = 0 ] || die "$seat_session has $n in-progress or blocked rows; hand them back first, or drop --blank to keep a handover"
+        echo "restarting $seat_session for new work without a handover"
+        ;;
+      saved)
+        [ -f "$fresh_dir/recap.md" ] || die "no saved handover in $fresh_dir; type /fresh in the seat or drop --saved"
+        age=$(($(/bin/date +%s) - $(/usr/bin/stat -f %m "$fresh_dir/recap.md")))
+        [ "$age" -le 3600 ] || die "the saved handover is $((age / 60)) minutes old; drop --saved for a new one"
+        echo "using the handover $seat_session saved $((age / 60)) minutes ago"
+        ;;
+      handover)
+        rm -f "$fresh_dir/recap.md" "$fresh_dir/error.txt"
+        run_rig send --raw "$seat_session" "/fresh" > /dev/null || die "could not type /fresh into $seat_session"
+        echo "typed /fresh into $seat_session; waiting up to ${timeout}s for its handover"
+        i=0
+        until [ -f "$fresh_dir/recap.md" ] || [ -f "$fresh_dir/error.txt" ]; do
+          i=$((i + 1))
+          [ "$i" -le "$timeout" ] || die "no handover after ${timeout}s; the seat is unchanged (check its pane)"
+          sleep 1
+        done
+        ;;
+    esac
+    prime=recap
+    if [ "$mode" = blank ]; then
+      prime=blank
+    else
+      [ -f "$fresh_dir/error.txt" ] && die "the seat wrote no handover: $(cat "$fresh_dir/error.txt"); the seat is unchanged"
+      run_rig context recap-write --rig "$rig_name" --seat "dev-$member" --file "$fresh_dir/recap.md" \
+        || die "recap-write failed; the seat is unchanged. The handover is in $fresh_dir/recap.md"
+      [ -f "$recap" ] || die "recap-write reported success but $recap is missing; the seat is unchanged"
+    fi
+    mkdir -p "$fresh_dir"
+    printf '%s\n' "$prime" > "$fresh_dir/prime"
+    run_rig seat launch "$seat_session" --fresh --stop --reason "devrig fresh ($mode): context reset" \
+      || { rm -f "$fresh_dir/prime"; die "fresh launch failed. If the seat is stopped, 'devrig rig launch $rig_name dev.$member' resumes its old conversation"; }
+    # The launcher deletes the marker when it builds the new conversation's first input.
+    i=0
+    while [ -f "$fresh_dir/prime" ]; do
+      i=$((i + 1))
+      if [ "$i" -gt 60 ]; then
+        rm -f "$fresh_dir/prime"
+        die "the fresh seat's launcher took no priming in 60s; check its pane and tell it by hand what to do"
+      fi
+      sleep 1
+    done
+    echo "$seat_session restarted on a fresh conversation, primed ($prime) in its first input"
+    ;;
+  project)
+    # A local history of the OpenRig project tree (slices, SPEC, PROGRESS, PROOF). Seats write the work tree; the git
+    # dir stays under ~/.devrig, which seat bash can neither read nor write, so no seat can plant a hook or
+    # config that this git would run. Hooks and fsmonitor are off regardless.
+    work=$rig_project
+    gitdir=$rig_project_git
+    [ -d "$work" ] || die "no project tree at $work (devrig provision)"
+    pgit() {
+      /usr/bin/git -c core.hooksPath=/dev/null -c core.fsmonitor=false -c core.pager=cat \
+        --git-dir="$gitdir" --work-tree="$work" "$@"
+    }
+    if [ ! -d "$gitdir" ]; then
+      umask 077
+      /usr/bin/git init -q --bare "$gitdir"
+      /usr/bin/git --git-dir="$gitdir" config core.bare false
+      /usr/bin/git --git-dir="$gitdir" config core.worktree "$work"
+      echo "created $gitdir for $work"
+    fi
+    case "${1:-}" in
+      "") pgit status --short ;;
+      snapshot)
+        [ "$#" -le 2 ] || die "usage: devrig project snapshot [message]"
+        msg=${2:-"chore(project): snapshot $(/bin/date -u +%Y-%m-%dT%H:%MZ)"}
+        pgit add -A
+        if pgit diff --cached --quiet; then
+          echo "nothing changed since the last snapshot"
+        else
+          pgit commit -q -m "$msg" && pgit log --oneline -1
+        fi
+        ;;
+      *) pgit "$@" ;;
+    esac
+    ;;
+  add)
+    # Grows the running rig by one member from the rendered spec (OpenRig's add_member converge op), so the other
+    # seats keep their panes and conversations. The new seat launches with the rig's stored env: block. Pod-local
+    # edges that name the member come along.
+    need_rig_choice add "$@"
+    [ "$#" -eq 1 ] || die "usage: devrig add <member>"
+    member=$1
+    case "$member" in "" | *[!a-z0-9]*) die "usage: devrig add <member>" ;; esac
+    [ -f "$spec" ] || die "no $spec (devrig provision)"
+    seat_session="dev-$member@$rig_name"
+    TMUX_TMPDIR="$state/tmux" "$tmux_bin" has-session -t "=$seat_session" 2> /dev/null \
+      && die "seat $seat_session is already running"
+    frag="$rig_control/add-$member.json"
+    NODE_PATH="$root/.runtime/openrig/node_modules" "$node" -e '
+      const [specPath, member] = process.argv.slice(1);
+      const spec = require("yaml").parse(require("node:fs").readFileSync(specPath, "utf8"));
+      const pod = (spec.pods ?? []).find((p) => p.id === "dev");
+      const m = pod?.members?.find((x) => x.id === member);
+      if (!m) { console.error(`no member ${member} in pod dev of ${specPath}`); process.exit(1); }
+      const edges = (pod.edges ?? []).filter((e) => e.from === member || e.to === member);
+      process.stdout.write(JSON.stringify({ member: m, edges }, null, 2) + "\n");
+    ' "$spec" "$member" > "$frag.tmp" || { rm -f "$frag.tmp"; die "could not read member $member from $spec"; }
+    mv "$frag.tmp" "$frag"
+    run_rig add "$rig_name" dev "$frag"
+    TMUX_TMPDIR="$state/tmux" "$tmux_bin" has-session -t "=$seat_session" 2> /dev/null \
+      || die "rig add returned but $seat_session has no tmux session; check devrig rig ps"
+    echo "$seat_session is running; attach with: devrig attach $member"
+    ;;
+  down)
+    need_rig_choice down "$@"
+    run_rig down "$rig_name" "$@"
+    ;;
+  new)
+    # Ignores --rig: the new rig is like --like, else the base rig.
+    usage="usage: devrig new <name> [--like <rig>]"
+    [ "$#" -ge 1 ] || die "$usage"
+    name=$1
+    shift
+    like=
+    case "${1:-}" in
+      --like)
+        [ "$#" -eq 2 ] || die "$usage"
+        like=$2
+        ;;
+      "") ;;
+      *) die "$usage" ;;
+    esac
+    dir=$(rig_env new "$name" ${like:+"$like"}) || exit 2
+    echo "scaffolded $dir like ${like:-the base rig}. Edit overlay.json (seats, role prompts and tools) and rig.yaml (models), then:"
+    echo "  devrig --rig $name up"
+    ;;
+  rig)
+    # Bare `rig tui` from an ordinary tab goes to Herdr, so the TUI's "Open terminal" stays in WezTerm.
+    if [ "$*" = tui ] && [ -z "$herdr_pass" ]; then
+      exec "$self" tui
+    fi
+    run_rig "$@"
+    ;;
+  *)
+    /usr/bin/sed -n '2,/^set -eu/{ /^set -eu/d; s/^# \{0,1\}//; p; }' "$self"
+    exit 2
+    ;;
+esac

@@ -1,0 +1,58 @@
+#!/bin/sh
+# Launcher for the pi-tui community harness (rig/pi-tui.yaml): Pi's own terminal UI as an OpenRig seat.
+# OpenRig types this into the seat's tmux pane with OPENRIG_CONVERSATION (new) or OPENRIG_RESUME_REF (resume),
+# and optionally OPENRIG_MODEL and OPENRIG_FIRST_INPUT. src/seat.ts prepare-tui validates them, provisions the
+# seat under $OPENRIG_HOME/state/pi-tui/<session>, and on a resume finds exactly one matching session file. An operator
+# seat resumes through the pointer its rig extension writes after /continue (src/rebind.ts).
+set -eu
+self=$(/usr/bin/readlink -f "$0")
+root=$(cd "$(dirname "$self")/../.." && pwd -P)
+node="$root/.runtime/node/node_modules/node/bin/node"
+
+out=$("$node" --disable-warning=ExperimentalWarning "$root/src/seat.ts" prepare-tui)
+{
+  IFS= read -r seat
+  IFS= read -r tools
+  IFS= read -r prompt
+  IFS= read -r pi
+  IFS= read -r agent_dir
+  IFS= read -r sessions
+  IFS= read -r model
+  IFS= read -r kind
+  IFS= read -r target
+  IFS= read -r first_input_file
+  IFS= read -r posture
+  IFS= read -r home
+  IFS= read -r ui_args
+  IFS= read -r end
+} << EOF
+$out
+EOF
+[ "$end" = end ] || { echo "[devrig-seat] refused: incomplete launch plan from seat.ts" >&2; exit 2; }
+
+case "$posture" in locked | operator) ;; *) echo "[devrig-seat] refused: bad posture from seat.ts" >&2; exit 2 ;; esac
+PI_CODING_AGENT_DIR=$agent_dir
+PI_CODING_AGENT_SESSION_DIR=$sessions
+export PI_CODING_AGENT_DIR PI_CODING_AGENT_SESSION_DIR
+
+set -- --session-dir "$sessions" --no-approve
+# A locked seat with policy roles.<role>.ui loads the operator's footer, theme and skills by explicit path
+# (seat.ts writeUiArgs, one argv entry per line). Pi still runs with --no-extensions, --no-skills, --no-themes.
+if [ -n "$ui_args" ]; then
+  [ "$posture" = locked ] && [ "$ui_args" = "$agent_dir/ui-args" ] && [ -f "$ui_args" ] || { echo "[devrig-seat] refused: bad ui args from seat.ts" >&2; exit 2; }
+  while IFS= read -r arg; do set -- "$@" "$arg"; done < "$ui_args"
+fi
+[ -n "$model" ] && set -- "$@" --model "$model"
+case "$kind" in
+  new) set -- "$@" --session-id "$target" ;;
+  resume) set -- "$@" --session "$target" ;;
+  *) echo "openrig-pi-tui-launch: bad plan from seat.ts" >&2; exit 2 ;;
+esac
+# The first input goes over byte for byte as Pi's first prompt. The trailing dot keeps final newlines.
+if [ -n "$first_input_file" ]; then
+  first_input=$(cat "$first_input_file" && printf '.')
+  first_input=${first_input%.}
+  [ -n "$first_input" ] && set -- "$@" -- "$first_input"
+fi
+[ "$posture" = operator ] && exec "$root/bin/pi-exec-operator" "$seat" "$prompt" "$pi" "$home" "$sessions" "$@"
+exec "$root/bin/pi-exec" "$seat" "$tools" "$prompt" "$pi" "$@"

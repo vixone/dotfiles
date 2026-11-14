@@ -1,0 +1,16 @@
+{
+ "rows": [
+  {
+   "issue_id": "mission-aaaa",
+   "label": "x"
+  },
+  {
+   "issue_id": "mission-aaaa.1",
+   "label": "x"
+  },
+  {
+   "issue_id": "mission-aaaa.1",
+   "label": "finding"
+  }
+ ]
+}

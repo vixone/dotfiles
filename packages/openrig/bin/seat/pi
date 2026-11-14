@@ -1,0 +1,26 @@
+#!/bin/sh
+# The `pi` that OpenRig's pi-runner spawns for headless rig seats (bin/seat is first on the daemon PATH).
+# src/seat.ts validates the runner's argv, resolves the seat's role, provisions the seat agent dir and
+# prints the launch plan: seat name, the role's tools, the role prompt and the real Pi launcher. bin/pi-exec then runs Pi with only the rig extension and its tools.
+set -eu
+self=$(/usr/bin/readlink -f "$0")
+root=$(cd "$(dirname "$self")/../.." && pwd -P)
+node="$root/.runtime/node/node_modules/node/bin/node"
+
+if [ "$#" -eq 1 ] && [ "$1" = "--version" ]; then
+  out=$("$node" --disable-warning=ExperimentalWarning "$root/src/seat.ts" version)
+  exec "$out" --version
+fi
+
+out=$("$node" --disable-warning=ExperimentalWarning "$root/src/seat.ts" prepare "$@")
+{
+  IFS= read -r seat
+  IFS= read -r tools
+  IFS= read -r prompt
+  IFS= read -r pi
+  IFS= read -r end
+} << EOF
+$out
+EOF
+[ "$end" = end ] || { echo "[devrig-seat] refused: incomplete launch plan from seat.ts" >&2; exit 2; }
+exec "$root/bin/pi-exec" "$seat" "$tools" "$prompt" "$pi" "$@"

@@ -1,0 +1,13 @@
+⚠️ **Similar lessons already exist:**
+
+- 🔴 MERGE CANDIDATE [0.970] `eks-nodegroup-taint-rollout`
+  Roll node taints in waves; a single-shot taint evicts everything and stalls the cluster.
+
+- 🟡 RELATED [0.910] `eks-nodegroup-drain-timeout`
+  Raise the drain grace period before scaling a busy nodegroup down.
+
+
+**Recommendation:** Update `eks-nodegroup-taint-rollout` instead of creating a new key.
+```bash
+bd remember "<merged insight>" --key eks-nodegroup-taint-rollout
+```

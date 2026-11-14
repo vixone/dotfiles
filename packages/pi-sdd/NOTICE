@@ -1,0 +1,16 @@
+pi-sdd derives its workflow content from The Agentic Startup.
+Upstream: rsmdt/the-startup
+Source revision: 88d447c7fb846f9d519faf59219cd34cf7577501
+Copyright (c) 2025-current Rudolf Schmidt
+Upstream license: MIT, reproduced in LICENSE.
+
+upstream.json records source paths, SHA-256 hashes and planned destinations.
+docs/port-map.md records parity requirements and intentional deviations.
+This package is an independent pi port. It does not include the Team plugin,
+upstream output styles, or a replacement footer.
+
+Host packages are peers, not bundled runtime dependencies. Development copies
+and their transitive dependencies are not part of the distributable archive.
+The reviewed distribution inventory is package.json files, enforced by
+scripts/archive.ts. Original Team resources, private runtime/configuration,
+Git history and tests are excluded. No provider-backed parity is asserted.

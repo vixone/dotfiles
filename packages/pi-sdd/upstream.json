@@ -1,0 +1,2669 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "rsmdt/the-startup",
+    "revision": "88d447c7fb846f9d519faf59219cd34cf7577501",
+    "license": "MIT"
+  },
+  "scope": {
+    "included": [
+      "plugins/start/**",
+      "LICENSE",
+      "docs/PRINCIPLES.md"
+    ],
+    "excluded": [
+      {
+        "path": "plugins/team/**",
+        "reason": "The approved port excludes the Team plugin and its agents."
+      },
+      {
+        "path": "plugins/constitution/**",
+        "reason": "Only Start constitution behavior is in scope; do not copy the separate governance plugin."
+      },
+      {
+        "path": "scripts/statusline*",
+        "reason": "Keep the installed pi footer and theme unchanged."
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "95001db9021b10b25d0471c590b7b5878ebeb693cd4fe8b8827fdf46c4f2699f",
+      "bytes": 1079,
+      "disposition": "port",
+      "targets": [
+        "LICENSE"
+      ],
+      "reason": "Preserve the upstream MIT license and copyright verbatim.",
+      "actions": [
+        "mission-b7h.8"
+      ]
+    },
+    {
+      "path": "docs/PRINCIPLES.md",
+      "sha256": "f1390271725d510d066ca4649936e73179549cf3fb2d75974c8c940444cf610b",
+      "bytes": 31955,
+      "disposition": "adapt",
+      "targets": [
+        "policies/workflow.md",
+        "policies/worker-common.md"
+      ],
+      "reason": "Keep progressive disclosure, explicit context and evaluation principles; replace Claude-specific runtime and model assumptions.",
+      "actions": [
+        "mission-b7h.11",
+        "mission-b7h.12"
+      ]
+    },
+    {
+      "path": "plugins/start/.claude-plugin/plugin.json",
+      "sha256": "68d03c24b17e13180c75f4b0d8f4aeded4a659466eacb81d6e30dfbf1c854d34",
+      "bytes": 511,
+      "disposition": "adapt",
+      "targets": [
+        "package.json"
+      ],
+      "reason": "Replace the Claude plugin manifest with a private native pi package manifest.",
+      "actions": [
+        "mission-b7h.8"
+      ]
+    },
+    {
+      "path": "plugins/start/README.md",
+      "sha256": "c020a2b08def345cc31262556185b4f6dc4532b5a29e4b162fffa4a214255021",
+      "bytes": 38461,
+      "disposition": "omit",
+      "targets": [],
+      "reason": "Write pi usage documentation from verified behavior; do not copy upstream marketing or obsolete installation instructions.",
+      "actions": [
+        "mission-b7h.22"
+      ]
+    },
+    {
+      "path": "plugins/start/output-styles/the-scaleup.md",
+      "sha256": "cf00ea91d03b1d1a0de69ac6eb191981e39a415e1e2616ba3945e31e6112c9bc",
+      "bytes": 21112,
+      "disposition": "omit",
+      "targets": [],
+      "reason": "Exclude personas and footer replacement. Preserve the existing pi presentation and writing policies.",
+      "actions": [
+        "mission-b7h.8"
+      ]
+    },
+    {
+      "path": "plugins/start/output-styles/the-startup.md",
+      "sha256": "2c0aa429a4b7128568aecfd019f01a7bb760063910cb84978695b4d6350eba70",
+      "bytes": 16635,
+      "disposition": "omit",
+      "targets": [],
+      "reason": "Exclude personas and footer replacement. Preserve the existing pi presentation and writing policies.",
+      "actions": [
+        "mission-b7h.8"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/analyze/SKILL.md",
+      "sha256": "20f3c63e891a98d9937498ef886705f2f0f74a2d4bb450ad881c68d734ca18f3",
+      "bytes": 7498,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-analyze/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/analyze/evals/evals.json",
+      "sha256": "f7610b2f34d6b5add7fdfc867b65d54dd61f38d7408442f9b146c5ce719cb418",
+      "bytes": 3119,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/maintenance/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/analyze/examples/output-example.md",
+      "sha256": "e7d6815aabb2a8df683362c740f8d5c24c4f2734cadb20edd9e9b5023be549ef",
+      "bytes": 6541,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-analyze/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/analyze/reference/output-format.md",
+      "sha256": "0e75dc1452481b5271e470a1d848b2cd5f0ac83d62bf68626f45190d893d5b64",
+      "bytes": 2779,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-analyze/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/analyze/reference/perspectives.md",
+      "sha256": "48ca40dc16bf52cd9229494161eaa37eb8914807dfc11f6abe6c8dcf3fcbae13",
+      "bytes": 4506,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-analyze/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/brainstorm/SKILL.md",
+      "sha256": "196e8e4c887a065e0f813640919e692803f7cc7d3ae93b56fb79faa35517d77b",
+      "bytes": 5011,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-brainstorm/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/SKILL.md",
+      "sha256": "34b5dfdc98801ca5e18dc68ed14dd5335fdabbb2ea5ccac0842b50744254bda3",
+      "bytes": 3120,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/examples/CONSTITUTION.md",
+      "sha256": "2c81c1a5012c05770f4934a111b2414da0397c956783b4a8431ecf32dbbcf331",
+      "bytes": 5395,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/examples/output-example.md",
+      "sha256": "6aa458b1ca04a3ef00b723f310504db648049d1e76e44b5178e568cab39a049d",
+      "bytes": 1490,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/reference/output-format.md",
+      "sha256": "878380f43a3e6228c847e4223d2efb7a4c6035d3e28cb6d63789a20ebfe08ae1",
+      "bytes": 326,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/reference/perspectives.md",
+      "sha256": "021838b1bb5dcc60fbb84fba4fb93c3bd8f57b6e11e86ceabec6c001baaed062",
+      "bytes": 1812,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/reference/rule-patterns.md",
+      "sha256": "af4b7b46dbe8f338eb4987ea7a1ad7faaad946775068aa561dfe75deb2ebdb4a",
+      "bytes": 8428,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/reference/scenarios.md",
+      "sha256": "d2f9c8f383bf2f95730e0171371213d61b15415977dca20c06f97d6333dd535f",
+      "bytes": 1765,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/constitution/template.md",
+      "sha256": "07c5afab72f9699f5bb4adc644869c031fe7e52692fdf8cf1d1246c74334b540",
+      "bytes": 3080,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-constitution/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/SKILL.md",
+      "sha256": "7d6f7149561623b346892c7573ba8572c20633162a3c3532a4f6a5a35bf3256b",
+      "bytes": 7310,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/examples/hard-bug-example.md",
+      "sha256": "9f7083b4d7b03671e6f5de37c7edd0770398c7174920dc83841b09c96275b79b",
+      "bytes": 7149,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/examples/output-example.md",
+      "sha256": "2d5139c3a09766d3d0d60444407e87b5c629ffe9ac99d98abc1c58d679eab752",
+      "bytes": 2090,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/reference/hypothesis-hygiene.md",
+      "sha256": "aaca5e7d37c38073539e3857c8e02a56fc30915fac2a4aa2cb2f156e4982bc95",
+      "bytes": 7596,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/reference/investigation-ladder.md",
+      "sha256": "d2aa4388b77c09ec260fe17c0db4e316132c9506f0fa214d5f87ffeb5f14bfb6",
+      "bytes": 4942,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/reference/output-format.md",
+      "sha256": "72cc69a237946e44561f768c2fd74bc1a8c32651880627b17b905d20153ddc7d",
+      "bytes": 842,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/debug/reference/perspectives.md",
+      "sha256": "117a3ea78fa67544d0b7ac24f3969536ddf4a6a395e03997439547877b151fbf",
+      "bytes": 2228,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-debug/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/SKILL.md",
+      "sha256": "9237a2e3438131328720383ad03a0c1e6d58e514d26107ac7ac43826752465ee",
+      "bytes": 3374,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/examples/output-example.md",
+      "sha256": "239d524194838bae8de9e242b957b45e6556ba02d27e1b929d492882fb3ddfc3",
+      "bytes": 659,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/reference/knowledge-capture.md",
+      "sha256": "c5d058d7eac019fb73cba523b9f71cc51716fae238352e575662793e0287b998",
+      "bytes": 11007,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/reference/output-format.md",
+      "sha256": "8cb6c89e3c56ed108bb3fa8c1435badc0c5cdeeb8e7eb233d0c9a1f9cd3f8cea",
+      "bytes": 263,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/reference/perspectives.md",
+      "sha256": "8f1537b8da296fe21ed6428d231ca75668803be974c9784ab3e6d0c6ba690b06",
+      "bytes": 1827,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/templates/domain-template.md",
+      "sha256": "a8f52b1ad0535ea4bb35c564abedaa785680760516b74715e1a93bc9d1d0832c",
+      "bytes": 6304,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/templates/interface-template.md",
+      "sha256": "66009ee791ed7269fbe7d906c7aa0df9cc448dadb8c0f1110108a97a298e2329",
+      "bytes": 4846,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/document/templates/pattern-template.md",
+      "sha256": "a1d27bf6f03cb20731a6ce5637fc1eb177614c12fdfb4ceb59c701419d119453",
+      "bytes": 2754,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-document/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/SKILL.md",
+      "sha256": "3d416855b03f3dc29cad851818124fea504dab1331d14c753114805e356cab2e",
+      "bytes": 6687,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-direct/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/evals.json",
+      "sha256": "0dfa51118878eb86b0ade39c6ca7e6c9e51bbaf5fb7cd6c006b66a527bf613e1",
+      "bytes": 5633,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/evals.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-1-simple-fix/requirements.md",
+      "sha256": "0376cea6ed31a3246ae466c0f548ed28c5f8c45aacec91663d2ceee243839f67",
+      "bytes": 480,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-1-simple-fix/requirements.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-1-simple-fix/solution.md",
+      "sha256": "dfae8906dab273211edf12ab408b160552898efdc084f9658623f3bd01adfda7",
+      "bytes": 540,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-1-simple-fix/solution.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-2-decompose-limit/requirements.md",
+      "sha256": "dce1b90cccee579ea8a2c1a57b557001ffdd2f91166d206aee21762c70694b2e",
+      "bytes": 780,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-2-decompose-limit/requirements.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-2-decompose-limit/solution.md",
+      "sha256": "f435065150dc48c7000db39f025915c6e76ba9e2cb02f4893902cae21ee56589",
+      "bytes": 558,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-2-decompose-limit/solution.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-3-freeform-brief/README.md",
+      "sha256": "bf78341e7642144ac081481b00296999fee390db9548e1d720246fb01d6b53b3",
+      "bytes": 255,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-3-freeform-brief/README.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-7-sequential-deps/requirements.md",
+      "sha256": "e13534f0eb72e61642b60ed809418e41b408d8aae837780015a9386a995f0a26",
+      "bytes": 542,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-7-sequential-deps/requirements.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/evals/fixtures/eval-7-sequential-deps/solution.md",
+      "sha256": "ae48b155e5003f4d822408dba4d9c810d703412f921a777319b5b79e281e2480",
+      "bytes": 898,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-direct/fixtures/eval-7-sequential-deps/solution.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/examples/output-example.md",
+      "sha256": "4d3a75482f6f6e307fe0e59c0137bcd2efa5abb938730165292fda3f0d768c83",
+      "bytes": 1003,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-direct/examples/output-example.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-direct/reference/output-format.md",
+      "sha256": "2d5b0fd214ca768af605b52b8261cbc0867aa37b77323ddc3b5136aa068d55ee",
+      "bytes": 1403,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-direct/reference/output-format.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/SKILL.md",
+      "sha256": "ad6840df77100b4d65ca33e8a1fba0ee6df3fd619c4aedd3b283d124e4b7a4c9",
+      "bytes": 12795,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-factory/SKILL.md"
+      ],
+      "reason": "Adapted explicit-only Factory skill with bounded total attempts and cooperative holdout boundaries; pure decision tests pass. Full orchestrator integration pending.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/evals.json",
+      "sha256": "68256b4f730eabaab61b17d5c893d44fd1d45f33b28710cd81e617fa5d64af91",
+      "bytes": 7319,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/evals.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/manifest.md",
+      "sha256": "44ec854e2fd4962a6df828d3eb1aec63b52f99239cdee8fc51a18ec2442ceb5f",
+      "bytes": 338,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/manifest.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/scenarios/dm1/health-status-fields.md",
+      "sha256": "788c7b652c5b41cbb3d1104dfc4395382fba8c8bfc07372758e726f9324e3224",
+      "bytes": 346,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/scenarios/dm1/health-status-fields.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/scenarios/rl1/rate-limit-exceeded.md",
+      "sha256": "613a99a24cca66a65142cc7f11012d8467919e7d8ce02643ae8fa8cb4c273364",
+      "bytes": 294,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/scenarios/rl1/rate-limit-exceeded.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/scenarios/ve1/endpoint-returns-200.md",
+      "sha256": "79d405ba4eb791dc6014dd2403fe929d619f05ee04cb8f4a4165eea5b2f40998",
+      "bytes": 291,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/scenarios/ve1/endpoint-returns-200.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/scenarios/ve1/invalid-method-405.md",
+      "sha256": "de4c020f96cae1fd25a58e97dd15a83a8b56ffa528f29b1a32eb0fbb7d5d252a",
+      "bytes": 186,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/scenarios/ve1/invalid-method-405.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/units/dm1.md",
+      "sha256": "bd0d7658e604a46ca48f2b23463f354060797cda06a0aa77d1d1c79f600c326c",
+      "bytes": 488,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/units/dm1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/units/rl1.md",
+      "sha256": "8dd8e113333a3b12ae16e5c61209b263c3743ad363d1316055c19c6c8c86853e",
+      "bytes": 421,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/units/rl1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-1-happy-path/units/ve1.md",
+      "sha256": "6e2dd4d7dcd86824f8040af618266340a20b32c4be92dcd6d434d7b1f520bee6",
+      "bytes": 496,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-1-happy-path/units/ve1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-2-retry/manifest.md",
+      "sha256": "a0dd3425d1dec1c85fc6a2b7cfc1cb5839ebf3ebc3da0495dfb41199ea63e4c1",
+      "bytes": 216,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-2-retry/manifest.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-2-retry/scenarios/ve1/age-out-of-range.md",
+      "sha256": "3837f0a34bf8bc9205498c729020922399ed6d7d04bf66750c3e9386da95602b",
+      "bytes": 315,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-2-retry/scenarios/ve1/age-out-of-range.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-2-retry/scenarios/ve1/invalid-email.md",
+      "sha256": "84a512c3519ad600c5641cbfd470b947c7f10afa120ea1b85265c1b3f86fddc6",
+      "bytes": 309,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-2-retry/scenarios/ve1/invalid-email.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-2-retry/scenarios/ve1/valid-input.md",
+      "sha256": "4054d60437a31c3d357b1a38ac4a2d383b0e1085623d13ada7552bcd8de4e3f4",
+      "bytes": 249,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-2-retry/scenarios/ve1/valid-input.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-2-retry/units/ve1.md",
+      "sha256": "6814b3ef769a549fa5b7ed55c3e749c6a49a39acd284b302c5c9e69d0b92f18e",
+      "bytes": 559,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-2-retry/units/ve1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-3-max-iterations/manifest.md",
+      "sha256": "6b437594d29e0220be3c4a2dcd9a44118af986f4abd871507c37e2c2726b9a38",
+      "bytes": 204,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-3-max-iterations/manifest.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-3-max-iterations/scenarios/ve1/returns-version.md",
+      "sha256": "cc4cd4222560871331a10268941b3f59558c4a96e9058a950855ccf0b636e13e",
+      "bytes": 246,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-3-max-iterations/scenarios/ve1/returns-version.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-3-max-iterations/units/ve1.md",
+      "sha256": "eb94b5c71015010b9d4dbaae639303d22242c77f7c487b2f9aa4aec9c6f335ef",
+      "bytes": 282,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-3-max-iterations/units/ve1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-4-parallel/manifest.md",
+      "sha256": "d11d13f194503d30546e1b9e21ce97b43ddf4bfa7841e950f39039130ecde5a1",
+      "bytes": 248,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-4-parallel/manifest.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-4-parallel/scenarios/ep1/ping-returns-pong.md",
+      "sha256": "5e2f506ba69ac2611a4a484628d78cc6e209d38de413dd02e88f297512ca6676",
+      "bytes": 187,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-4-parallel/scenarios/ep1/ping-returns-pong.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-4-parallel/scenarios/ep2/echo-missing-body.md",
+      "sha256": "6a4fc392aa011f51286251e855c88d3cce49f8c743a4e88bc094ec17ed752929",
+      "bytes": 164,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-4-parallel/scenarios/ep2/echo-missing-body.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-4-parallel/scenarios/ep2/echo-returns-body.md",
+      "sha256": "e02a3db5e4e1bd081d2f101ec0213304beaadb04c144d126bfc7a065dda1e5f9",
+      "bytes": 226,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-4-parallel/scenarios/ep2/echo-returns-body.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-4-parallel/units/ep1.md",
+      "sha256": "19328aeb1212a01641a49715783a5194f40655112d6f5fae595749a593ca20ad",
+      "bytes": 247,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-4-parallel/units/ep1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-4-parallel/units/ep2.md",
+      "sha256": "edde96302fcc9c3fa90ceb3d8018b724dc5bcd36f2f96e198e523b777b08b83e",
+      "bytes": 280,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-4-parallel/units/ep2.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-5-resume/manifest.md",
+      "sha256": "13c44277c42b609fdbcb43326ef10657c192f6a2820286afc18112b023ef8668",
+      "bytes": 273,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-5-resume/manifest.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-5-resume/scenarios/dm1/health-data.md",
+      "sha256": "8e62325f87c03e372d4471f8e9d9fed6d0d2312120c6c5d7486f3f9662dc5290",
+      "bytes": 170,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-5-resume/scenarios/dm1/health-data.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-5-resume/scenarios/ve1/health-endpoint.md",
+      "sha256": "a358632819c63b7199a762c10240d0c88be65f52a852b3c1dbb5f36b8bcd1281",
+      "bytes": 209,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-5-resume/scenarios/ve1/health-endpoint.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-5-resume/units/dm1.md",
+      "sha256": "5bb15ace847e4de180ae63a2bdc4f6708f9b61c9a9df49631162794c2a851e3e",
+      "bytes": 275,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-5-resume/units/dm1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-5-resume/units/ve1.md",
+      "sha256": "da6a0e03e025bfec03a42700c3dc0dc19076bd4b11cda72d049e8f2cca4416c5",
+      "bytes": 303,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-5-resume/units/ve1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/manifest.md",
+      "sha256": "531d5b7e9521173c9b8de5d4a24855211404d001f0ac034ca87d19c4b794fce5",
+      "bytes": 251,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/manifest.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/scenarios/dm1/e2e-stubs.md",
+      "sha256": "c67fd3e349f62fde86ea32b6c7d7c9e6a50175ff2992b85f82a07d4142943772",
+      "bytes": 430,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/scenarios/dm1/e2e-stubs.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/scenarios/dm1/echo-response.md",
+      "sha256": "73c38bd5df3f804fd3595dbdd82d211cf66f823df5df9b32242f68e3d7b3a380",
+      "bytes": 195,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/scenarios/dm1/echo-response.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/scenarios/ve1/e2e-stubs.md",
+      "sha256": "219b61b5c1856a9d34d732113263ef6cee04c8b4360dfef3b8f5790e0109760e",
+      "bytes": 1027,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/scenarios/ve1/e2e-stubs.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/scenarios/ve1/echo-missing-message.md",
+      "sha256": "ebdd69581c5f41ffffbe13d665da6e0f15e2173680e935db0e18fe051fe856f0",
+      "bytes": 213,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/scenarios/ve1/echo-missing-message.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/scenarios/ve1/echo-success.md",
+      "sha256": "0a71a1641047742a8832a0bf8b2936f6881e6d0140e07f7118b72b4047842173",
+      "bytes": 278,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/scenarios/ve1/echo-success.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/units/dm1.md",
+      "sha256": "fd81120e4b4779a3d8265043a6c9190b17c51c2c4aa971ca5c5d797dde7f98fc",
+      "bytes": 372,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/units/dm1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/evals/fixtures/eval-6-e2e-stubs/units/ve1.md",
+      "sha256": "02c7b2dedcab4eaa804256c61f5c6c104ffabd3359cd76b284b99cc870acf1bf",
+      "bytes": 347,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/factory/implement-factory/fixtures/eval-6-e2e-stubs/units/ve1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/examples/output-example.md",
+      "sha256": "b4c7ac53ccf13bfd3f9c5888ef7e472b487cfb512d85e0051a7e93eb91b21583",
+      "bytes": 2841,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-factory/examples/output-example.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/reference/code-agent.md",
+      "sha256": "8721024cddfecd2be9a21c9557ffe332f625ca2e777a25ab33efdfd23102dc74",
+      "bytes": 3021,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-factory/reference/code-agent.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/reference/eval-agent.md",
+      "sha256": "cc8a88612148af09cf94087a3dd8907102934981963bacd9f2a4ae8ad9109f1f",
+      "bytes": 3706,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-factory/reference/eval-agent.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-factory/reference/output-format.md",
+      "sha256": "0dcb107f2935f6287f22e2feaa7acb1e1296042ef4c619a2e7587938bfeae1ca",
+      "bytes": 2118,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-factory/reference/output-format.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.18"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/SKILL.md",
+      "sha256": "2f2c2325871bb4fe61120c8d692b792c06c6240a991e7d47aac6cdc30945e437",
+      "bytes": 6971,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-incremental/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/evals.json",
+      "sha256": "8cde1952ea5be115d6bd049e1ba1eec81d5fd3b7b3883ffb4b2db5667fcdf1a0",
+      "bytes": 5809,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/evals.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-1-happy-path/plan/README.md",
+      "sha256": "f33f08f506972561ffe53cd65cbe2d9c34cde012653b464529a68b672cf703ed",
+      "bytes": 380,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-1-happy-path/plan/README.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-1-happy-path/plan/phase-1.md",
+      "sha256": "2a4821ce4427bfcad123c638744cb2784ab35430a0e99f901291d4c6e70179c9",
+      "bytes": 774,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-1-happy-path/plan/phase-1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-1-happy-path/plan/phase-2.md",
+      "sha256": "a667fd666caf5ac227ce28bcae2252dcb8a61d34fa82b27f3d985343394e00e6",
+      "bytes": 602,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-1-happy-path/plan/phase-2.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-1-happy-path/plan/phase-3.md",
+      "sha256": "467be4a858353414c57217234078ef93f5f062a39f2ebdc8c74063e6a9e6d405",
+      "bytes": 758,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-1-happy-path/plan/phase-3.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-2-resume/plan/README.md",
+      "sha256": "e53a25a51032dcbd21bef4a74171616d32288e8daf19530a98c30e2e905f94b6",
+      "bytes": 233,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-2-resume/plan/README.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-2-resume/plan/phase-1.md",
+      "sha256": "cf56a64f610deeb6b6d0e8466a125d593e47072322f9d527980a68fad10916d5",
+      "bytes": 223,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-2-resume/plan/phase-1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-2-resume/plan/phase-2.md",
+      "sha256": "e7fba062a5b452b17542a3efd809b69b3f5c431e87345e3cee670de0324f114a",
+      "bytes": 390,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-2-resume/plan/phase-2.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-2-resume/plan/phase-3.md",
+      "sha256": "1b48cf99eccfdb47a508e124748166e0e86e6bebab9d73a92b896dbb20292bbf",
+      "bytes": 295,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-2-resume/plan/phase-3.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-3-parallel-tasks/plan/README.md",
+      "sha256": "f91767b70a69825520a77319961c227aaa9c99a5e50681476d32f53a136810cf",
+      "bytes": 205,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-3-parallel-tasks/plan/README.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-3-parallel-tasks/plan/phase-1.md",
+      "sha256": "1bdf3492c6a5d8855a1211617045a3c01739c22473464545ea151586b73da5e4",
+      "bytes": 286,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-3-parallel-tasks/plan/phase-1.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-3-parallel-tasks/plan/phase-2.md",
+      "sha256": "1c30467674f3fe2f9b9c8c591952756277893d039a8492d806164dd29f34fd1e",
+      "bytes": 1050,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-3-parallel-tasks/plan/phase-2.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-6-no-plan/requirements.md",
+      "sha256": "1c74471d39cd7eec6d9d6e01e64dcd74fdd25287951f2f5fe81609be97dbce0e",
+      "bytes": 304,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-6-no-plan/requirements.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/evals/fixtures/eval-6-no-plan/solution.md",
+      "sha256": "c5315ab51dc32eb20e0cb19b67dfe13854318ada08f88797d81d8c418e391411",
+      "bytes": 167,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/execution/implement-incremental/fixtures/eval-6-no-plan/solution.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/examples/output-example.md",
+      "sha256": "783725e4a97b4f59e307adf1ce7ddb51d61328aeee3a55dd54517cd9257da4e5",
+      "bytes": 1769,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-incremental/examples/output-example.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/reference/output-format.md",
+      "sha256": "440cf0b3371a10ee8b1554a6cc06700368a562aa969d32d6ac40f1f384b74149",
+      "bytes": 1748,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-incremental/reference/output-format.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement-incremental/reference/perspectives.md",
+      "sha256": "b0b4130cc1d01f7bb0974f6bf867ac09249e7f909402fc8f168bdaee06950012",
+      "bytes": 1172,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement-incremental/reference/perspectives.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/implement/SKILL.md",
+      "sha256": "b8a2dad1f693610285f66df08c215423f8bf88ef7e54dc03f8f07034a246e9bd",
+      "bytes": 5058,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-implement/SKILL.md"
+      ],
+      "reason": "Explicit descriptor dispatch and pure execution decisions tested offline. Eval inputs consolidated in cases.json; historical per-fixture destinations remain planned. Workspace controls fail closed until the parent receipt/claim/review authority adapter is wired.",
+      "actions": [
+        "mission-b7h.16"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/refactor/SKILL.md",
+      "sha256": "a8997dd0f7212ab82abe6d6437b33defef31a81a8ead6e5c5596c128a95007d2",
+      "bytes": 3990,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-refactor/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/refactor/examples/output-example.md",
+      "sha256": "a8a1e7b9a6f97f3aca2c1053fdd0992fbbac3288eba91f2ffd7f51ce6dc7734c",
+      "bytes": 2803,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-refactor/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/refactor/reference/code-smells.md",
+      "sha256": "835c330d560ef857b7dffb701f3bf4451f550dfbe4d11b1f55b99c2c96a22e20",
+      "bytes": 8247,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-refactor/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/refactor/reference/output-format.md",
+      "sha256": "1c46ea06c25fdef9c42e42e6257ef979159092dfdfda07bad21e91402c20e3d5",
+      "bytes": 855,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-refactor/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/refactor/reference/perspectives.md",
+      "sha256": "d73c8c2f3cb3831c29fc3245a5289f574bcf96402cc6e5e0a767c3a04095fa56",
+      "bytes": 2015,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-refactor/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/review/SKILL.md",
+      "sha256": "00def3d51564d47352f77b0e9f2cc2d279796c8e08276cfe35d96f9bb195f0b4",
+      "bytes": 4692,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-review/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/review/examples/output-example.md",
+      "sha256": "c5384269097fdf261977602c59cc825349ef6999d275745636edb44609c87e5c",
+      "bytes": 2292,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-review/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/review/reference/checklists.md",
+      "sha256": "26d925b044160e14738ef7a31bc519869baaa0684753abf59309af4301c34a81",
+      "bytes": 2394,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-review/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/review/reference/classification.md",
+      "sha256": "32a526e7bdb9553ab36333a9ea7d97de5feaeb6850252a5fd3afdfd749c5e240",
+      "bytes": 3398,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-review/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/review/reference/output-format.md",
+      "sha256": "6eb5ff9e0b8d4223fc40bd3152b70ca6afd6e5a12b02524a6e1b4b4383254d55",
+      "bytes": 1850,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-review/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/review/reference/perspectives.md",
+      "sha256": "4645b1dc4190f38319af942ea80983f18559f4c979ad519eb1ac66ead3cf6b6e",
+      "bytes": 1670,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-review/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/SKILL.md",
+      "sha256": "46f8d73855de6566bc89dc40a1ccc866c3049da6677f466ffc53485bac61763a",
+      "bytes": 8519,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/evals/evals.json",
+      "sha256": "7a8345ffddbdaafe08dab5b3843061a04c0644787b7653ffe307a065512c4861",
+      "bytes": 4137,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/eval-contracts.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/evals/fixtures/spec-missing-sdd/requirements.md",
+      "sha256": "2201cdab4e8964da76d94f099289c1f379e393feb9f35df01e6c334b81a919cb",
+      "bytes": 316,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/evals/fixtures/spec-with-both/requirements.md",
+      "sha256": "7639fe1ada809b6cfe350fe1f58367c152e133588ee4d111bd800b25c2bad6e2",
+      "bytes": 830,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/evals/fixtures/spec-with-both/solution.md",
+      "sha256": "656ece761b5f0a3605e54544b1ddb11f88fa39cb7cdeb9912f7062e2dac5364b",
+      "bytes": 602,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/examples/manifest-example.md",
+      "sha256": "8efde967c36bcf8096f3bd83ab65c174aaf31ca1e02b399cf32ea71c7c87d4cb",
+      "bytes": 1004,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/examples/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/examples/scenario-example.md",
+      "sha256": "01e12778b8f2258ecc19dd6019af9bbc2d66ef74ab636a4139e6b9d00a690ad4",
+      "bytes": 1368,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/examples/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/examples/unit-example.md",
+      "sha256": "484ae923511566b9ee3e22638f0dbb3a8cc5502e39421c7aada5b30237d3aef8",
+      "bytes": 1216,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/examples/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/reference/decomposition.md",
+      "sha256": "38f4bcca54a047f8300a3d715309ae1a8a8cde7aada612903d44630db4b890b5",
+      "bytes": 1879,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/reference/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/reference/output-format.md",
+      "sha256": "c20e2203429a6585cb65b6e875a9f12e926d488a8259693d0e465d6c8427115d",
+      "bytes": 910,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/reference/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/reference/scenario-guide.md",
+      "sha256": "c6242aa21e8340b3f147c1de7bef155872cae74a7d0a01124b618f15760d1b4d",
+      "bytes": 2783,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/reference/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/templates/e2e-stubs.md",
+      "sha256": "a74bf4bbe2f895c7bc99f6af04ee2db8c3af70df424c2b26a721fc372453e7e3",
+      "bytes": 1883,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/templates/e2e-stubs.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/templates/manifest.md",
+      "sha256": "281341e8fdfb52a1d4d6f9aa07fd95b80dae6a7db6799060727b1c79c106b2d4",
+      "bytes": 386,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/templates/manifest.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/templates/scenario.md",
+      "sha256": "84aef824b86d0bfc5d8dab1f1b96f01e305e6119378fcd518597b717dc81843d",
+      "bytes": 489,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/templates/scenario.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/templates/unit.md",
+      "sha256": "852200c8d82c61e1c47e60cc1dd225304a2c5d84523e671761e1551439cd324b",
+      "bytes": 599,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/templates/unit.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-factory/validation.md",
+      "sha256": "4aebc942529ff9bb4e950f683746b48d9cb04c2b1badae26d289ec8c772da0c5",
+      "bytes": 2975,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-factory/reference/factory.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/SKILL.md",
+      "sha256": "3bda06e6b87d3e4b8cc1cee3fec72f2982786d81bca9c132fa7bd9bf0de656a1",
+      "bytes": 5708,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/evals.json",
+      "sha256": "211e1cce5611977dde345da07a4217b7637c53c065a8dedaa3abae12b78e795d",
+      "bytes": 2493,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/eval-contracts.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-single-feature/requirements.md",
+      "sha256": "b94672a2f1868564d88d83161b6661a421e0b85e0b88ffd17cd49c3543a74cd2",
+      "bytes": 896,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-single-feature/solution.md",
+      "sha256": "3f5d47417147d6acd3eb4de7e3b6acaf38749b2b6f1e0e7c7c1f88ae08057a9f",
+      "bytes": 1296,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-validation-gaps/plan/README.md",
+      "sha256": "a06c5d69d51ed09f2cc9c06a2a7e2a71185f2ae579a5db1955ed90b463969413",
+      "bytes": 418,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-validation-gaps/plan/phase-1.md",
+      "sha256": "80d4f225aad2b390cc8b32c91d468e5fe3a286d492a3f978d41316c9872d9f5d",
+      "bytes": 549,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-validation-gaps/plan/phase-2.md",
+      "sha256": "8b4ed451112fdb2c38af6e853d836ef241fe21bcab36db8d626163a0b2d593ee",
+      "bytes": 221,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-validation-gaps/requirements.md",
+      "sha256": "e1b2bf483be86f0d55fd2414217b70a95ddb0f31cd4e9995415c13e6ce56466f",
+      "bytes": 205,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/evals/fixtures/spec-validation-gaps/solution.md",
+      "sha256": "3c9676ad5f9215038d188a002f007f1411d53946bddc33719447a550e96acff9",
+      "bytes": 181,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/examples/output-example.md",
+      "sha256": "437cb9329f07f15319a9eec9213e3621c4081a0e7a194220d2bbf23311d3504c",
+      "bytes": 471,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/examples/phase-examples.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/examples/phase-examples.md",
+      "sha256": "85e8adfb43df24657d32360b47cb852ae16f2b1d65117773e160af613df39361",
+      "bytes": 6863,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/examples/phase-examples.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/reference/output-format.md",
+      "sha256": "5f346cfa6aeb4d4008ab8152a0e6c6ab49987445233248681bedbefbe291d15d",
+      "bytes": 418,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/reference/task-structure.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/reference/task-structure.md",
+      "sha256": "2f1c1ea591125b9d362bd0e6e4f4ee4fa0904b7ebad2642f64decf64472851c5",
+      "bytes": 2972,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/reference/task-structure.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/template.md",
+      "sha256": "d45649d735b41daa3eb085075cc8b0c57e58fd29386cad99cfba0d13afc33bdf",
+      "bytes": 5829,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/template.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/templates/phase.md",
+      "sha256": "ce4cda65bcfcfd348a888c73d0a32e4cbeec59433e3554fa6fbb68c32660ea7e",
+      "bytes": 1870,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/templates/phase.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-incremental/validation.md",
+      "sha256": "cbca3805ed35fcc022fcbe47dc6ac696ca2907992a8dc3b136de94e43d8f7efb",
+      "bytes": 4080,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-incremental/reference/task-structure.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-meta/SKILL.md",
+      "sha256": "7cf79a1fd2a6d1fd039af3b9a7dfb6531f68f888e4d6d39e3203042ae3fb7178",
+      "bytes": 3737,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-meta/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-meta/reference/spec-management.md",
+      "sha256": "c00aba7aa1452a246dbbab5d62c2cec975af290199cd32051d4aff948d6c0e95",
+      "bytes": 3926,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-meta/reference/spec-management.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-meta/spec.py",
+      "sha256": "f6ceeae7cdc61f7887afb94ad69893a6a9dc2e0f0edcf34a4b09e98af54dc688",
+      "bytes": 12513,
+      "disposition": "adapt",
+      "targets": [
+        "src/spec-schema.ts",
+        "src/spec-store.ts"
+      ],
+      "reason": "Replace Python file/status operations with validated TypeScript descriptors and safe read/create resolution; beads owns execution state.",
+      "actions": [
+        "mission-b7h.9"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-meta/template.md",
+      "sha256": "e6861d54887c1532ff6970dbd3329a65aad1efc61ba983a7dd5129bb22205bb6",
+      "bytes": 1205,
+      "disposition": "adapt",
+      "targets": [
+        "templates/spec-readme.md",
+        "skills/sdd-specify-meta/template.md"
+      ],
+      "reason": "Use a navigation-only README template without a duplicate decisions or execution ledger.",
+      "actions": [
+        "mission-b7h.9",
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/SKILL.md",
+      "sha256": "96afb0cd2755ce1ab405f69ca92aebe516c2371e8748d4157ebf69bae742b082",
+      "bytes": 3970,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/evals/evals.json",
+      "sha256": "e83fa15b385e52752157ef3e4a234378e180cfc147450fed68b253cda875c8be",
+      "bytes": 3401,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/eval-contracts.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/examples/good-prd.md",
+      "sha256": "512e72c2973758422f676a818b31531b910494c1811019d9c65b90cb0f978847",
+      "bytes": 3090,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/examples/good-prd.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/examples/output-example.md",
+      "sha256": "6be294f7304e861f74be95038ef92021abb2baa2fea7b3fe320d9656bbeb342d",
+      "bytes": 400,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/examples/good-prd.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/reference/focus-and-mece.md",
+      "sha256": "38b9affb1b40cf6f02539c23b10518d97ec5d3b6c223d4aae765be9c29d63ff9",
+      "bytes": 2407,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/reference/requirements.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/reference/output-format.md",
+      "sha256": "0b540966723f95c08afa6198401791a7398c12caa97e26e8a5657e893833456c",
+      "bytes": 879,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/reference/requirements.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/template.md",
+      "sha256": "02681a68d63552369ca82ef6da70189916b735b1c1611559dd93423537ac3af4",
+      "bytes": 8314,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/template.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-requirements/validation.md",
+      "sha256": "bd1d4edc1758b83a43e3194e673d40776879785a0f168873e4898c57494942f8",
+      "bytes": 3093,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-requirements/reference/requirements.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/SKILL.md",
+      "sha256": "ba55d2f2188f80973fecd071a8bf3bafee9d80977f43c78401541903f0764c98",
+      "bytes": 6838,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/evals/evals.json",
+      "sha256": "7ae051d6d83618708f3528215f6a1e1523a074596af670bee96d507292b6244b",
+      "bytes": 4056,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/eval-contracts.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/examples/architecture-examples.md",
+      "sha256": "de1ed404df7bd3ad7614a134dcf97d861a18665aa2a473e982ba6fbff456f53a",
+      "bytes": 7548,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/examples/architecture-examples.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/examples/output-example.md",
+      "sha256": "8f8272cfadf61c4eb8e0ffe87a57dabb6b60c0de5e4a366100d4ab19b361e3ba",
+      "bytes": 686,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/examples/architecture-examples.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/reference/focus-and-mece.md",
+      "sha256": "8d1dbe3afef0b745ba88d707558f2b33f2dfdbe3cddec5db9b94473e43f2e0c5",
+      "bytes": 2335,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/reference/solution.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/reference/output-format.md",
+      "sha256": "92c01350a1afffaf0c14c43a2a5f24878257a560acdcf69f3f3f063293ee4606",
+      "bytes": 415,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/reference/solution.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/template.md",
+      "sha256": "1a46dd36d39ddd4237e1805da82019f46114678e4c356e827d3b164427f0a123",
+      "bytes": 29292,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/template.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify-solution/validation.md",
+      "sha256": "761e5d245e3fa7b0966af1f651b8d112769a8c1d36de4164cfe040ab05916f21",
+      "bytes": 4625,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify-solution/reference/solution.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/SKILL.md",
+      "sha256": "5d4bd876ad0af9a880b621022bd1801869f1318044ae86e34b795e945583189b",
+      "bytes": 6153,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/evals.json",
+      "sha256": "fd42a958c2e8357377be5fe4fc7caf955d5ddd9afdc5140d142540b355bdbcf6",
+      "bytes": 4291,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/eval-contracts.md"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/fixtures/classifier-direct/requirements.md",
+      "sha256": "1178128b83a0961e4f89a320afd7e1a1ce188c4cdaa5160a66d23ebe9b761408",
+      "bytes": 288,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/fixtures/classifier-direct/solution.md",
+      "sha256": "5938a23bb4396fab9feef2317ede1200d6cc1b5042838b78f787d11c704aee14",
+      "bytes": 176,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/fixtures/classifier-factory/requirements.md",
+      "sha256": "8b6fedfca5561885f41375311753d471507a4ecc5067dc383c9dcd688231ec88",
+      "bytes": 337,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/fixtures/classifier-factory/solution.md",
+      "sha256": "f33f7dec169a19b5be303b2dc6569f0112512aa07b7e1bbf4fcfef0af0e747a0",
+      "bytes": 383,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/fixtures/classifier-incremental/requirements.md",
+      "sha256": "a980abb5b97ef892e4856df0498a37e79405647f394cb29712bb9f1b7bdcaa90",
+      "bytes": 458,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/evals/fixtures/classifier-incremental/solution.md",
+      "sha256": "8b0ae6923276306db021201e01868808830c178d603cdadb020e0adac0c474fe",
+      "bytes": 301,
+      "disposition": "test-fixture",
+      "targets": [
+        "test/fixtures/specification/cases.json"
+      ],
+      "reason": "Adapt upstream cases into deterministic offline tests; old checkmarks are input evidence, never trusted completion.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/examples/output-example.md",
+      "sha256": "d8a030bacd05c87bcc92e7bdf67260186fe2cd7bb7bbe211af10a45435c7c3db",
+      "bytes": 1389,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify/examples/output-example.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/reference/classifier.md",
+      "sha256": "016219ed21a38347e3fb3e4477a469fbf1a1dabb505e34a45a9e903e527395d8",
+      "bytes": 4103,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify/reference/workflow.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/reference/output-format.md",
+      "sha256": "ab9ede295e4954f4804fd16b0bb4bb2017705489e362aedc64665985a74d2e43",
+      "bytes": 682,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify/reference/workflow.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/specify/reference/perspectives.md",
+      "sha256": "a24f9d8f6d0ef0b7f0837dd3e40f6efedb6e85b4fdedd8760a3514980417972c",
+      "bytes": 1868,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-specify/reference/workflow.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.15"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/test/SKILL.md",
+      "sha256": "5a0d44751f4164ed0584c94ec1e3c99f903bb6dadcaf668fb02de5d6afc1ec3c",
+      "bytes": 11688,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-test/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/test/examples/output-example.md",
+      "sha256": "9aafead74dd7b851a86fb8fad70579f6bc8d2bcd2830c164745a06ee511c2075",
+      "bytes": 8359,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-test/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/test/reference/discovery-protocol.md",
+      "sha256": "e94d95e1008329ad160efc6125cd25704040331f7214c59bb91ff613a77065f3",
+      "bytes": 5861,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-test/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/test/reference/failure-investigation.md",
+      "sha256": "6a273442c584be6ba998eaa4f3eb445aa1f8c2e84455f8d4c6e721cd6927f1fb",
+      "bytes": 4871,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-test/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/test/reference/output-format.md",
+      "sha256": "1ab7fa2ad3133abc9d087dca41f22aecdb344650be83e30c667a56f3d3e3d7a7",
+      "bytes": 5022,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-test/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/test/reference/test-design-rules.md",
+      "sha256": "a5d5541b106bc25ae142aef412ed03f95ea8332173bc70b6f5f6820a3daa708f",
+      "bytes": 11026,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-test/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/SKILL.md",
+      "sha256": "2b6a0fc0a7059bdfcc09b171ac8ac4d2a4aa3f769a2f7b1ef1160014e6907da2",
+      "bytes": 5042,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/examples/output-example.md",
+      "sha256": "161c4f4fb8793296601a1dc3418f039fdf1457e34ea313f7a289401787305afa",
+      "bytes": 2500,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/reference/3cs-framework.md",
+      "sha256": "7988d603155487d8d00f9926182ed5902a860fec662afb56dddab4b5127d5036",
+      "bytes": 6428,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/reference/ambiguity-detection.md",
+      "sha256": "d81e910038570fe6f1ce14daea6300c88e23a60d2b07426eb96409c6517a4c68",
+      "bytes": 4037,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/reference/constitution-validation.md",
+      "sha256": "1842236b724db2c8c2e21261ed07e33786470de59194e0fb019b094bbedd7d3b",
+      "bytes": 8521,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/reference/drift-detection.md",
+      "sha256": "bbc6e2fc148144e601e5b91f4c61daa3e162d33f04e3ef6626d2ff9d7a653362",
+      "bytes": 9662,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/reference/output-format.md",
+      "sha256": "d97cd19943af9f342e53ca21c8e3e752c5cea5158c6279253926d92eeb907ddd",
+      "bytes": 942,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/validate/reference/perspectives.md",
+      "sha256": "91c958aea38cb5319817d0a81c4a452f35025d94c65c0dc4bec8548e2391328e",
+      "bytes": 4965,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-validate/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.19"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/SKILL.md",
+      "sha256": "562859590d23905c08df829ef3a8c07c0ea05c1ab925901124e006213ce44f90",
+      "bytes": 4409,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/SKILL.md"
+      ],
+      "reason": "Use an explicit-only namespaced pi skill with guarded control/worker calls and single-owner state.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/examples/canonical-skill.md",
+      "sha256": "d052364ba8cafb9d34aec7c7fe29eb362f6a7a878b59ed8f4d91caf1483d07cf",
+      "bytes": 3709,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/examples/output-example.md",
+      "sha256": "e197c71bb599225766cf415deab29f151df7d5d1e47714f57b3e44f68db1e924",
+      "bytes": 2023,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/reference/common-failures.md",
+      "sha256": "630767d6e3a3ce0726d844f6e79f2de8bced628672b5b2d75985ce547f2e3437",
+      "bytes": 2804,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/reference/conventions.md",
+      "sha256": "ea50ade28b435dbf51c9b2b1d871dd9989f3b00f2cc3c1477bf13408d2d4c5fb",
+      "bytes": 12104,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/reference/output-format.md",
+      "sha256": "73599fdef7ddc36f45a9638105697832b926e36641b1fa83313f40c3ddf327fb",
+      "bytes": 1502,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/reference/persuasion-principles.md",
+      "sha256": "cf1a192cc3909f5629650b830760c3397783528871f274cc6b8099c118647a24",
+      "bytes": 3958,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    },
+    {
+      "path": "plugins/start/skills/writing-skills/reference/testing-with-subagents.md",
+      "sha256": "d5821f29beb409236c9d45741ef09e15519db6605933f55652e0353da418ac14",
+      "bytes": 8405,
+      "disposition": "adapt",
+      "targets": [
+        "skills/sdd-writing-skills/reference/methods.md"
+      ],
+      "reason": "Preserve useful method and example content; replace unsupported tools, Team references and mutable file status.",
+      "actions": [
+        "mission-b7h.20"
+      ]
+    }
+  ]
+}

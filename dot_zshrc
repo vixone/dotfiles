@@ -1,253 +1,42 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-# Path to your Oh My Zsh installation.
+# Personal shell setup. Optional tools are enabled only when installed.
+export PATH="$HOME/.local/bin:$HOME/.pi/bin:$PATH"
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-alias python3='python3.14'
-alias pip3='pip3.14'
-
-# Disable oh-my-zsh theme — using Starship prompt instead
 ZSH_THEME=""
-
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-alias vim="nvim"
-alias gs="git status"
-alias tf="terraform"
-gitcleanup() {
-  git branch --merged | grep -vE '(^\*|master|main|develop)' | xargs -n 1 git branch -d
-}
+[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+export EDITOR=nvim
+export VISUAL=nvim
+export MX_DB="$HOME/.missions/mx.db"
+alias vim=nvim
+alias gs='git status'
 markd() { glow "$@"; }
-alias k=kubectl
-kns() { kubectl config set-context --current --namespace "$1"; }
-certinfo() {
-  local target="$1"
-  if [[ ! "$target" =~ ":" ]]; then
-    target="${target}:443"
-  fi
-  openssl s_client -connect "$target" -showcerts </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
-}
-
-export PATH=/Users/t026chirv/.local/bin:$PATH
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-export EDITOR='nvim'
-export VISUAL='nvim'
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Starship prompt (replaces Powerlevel10k — resize-safe)
-eval "$(starship init zsh)"
-
-# Show Starship's Kubernetes module after kubectl commands, and hide it after
-# other commands or directory changes.
-autoload -Uz add-zsh-hook
-starship_kubectl_preexec() {
-  case "$1" in
-    kubectl|kubectl\ *|k|k\ *)
-      export STARSHIP_KUBECTL_ACTIVE=1
-      ;;
-    *)
-      unset STARSHIP_KUBECTL_ACTIVE
-      ;;
-  esac
-}
-starship_kubectl_chpwd() {
-  unset STARSHIP_KUBECTL_ACTIVE
-}
-add-zsh-hook preexec starship_kubectl_preexec
-add-zsh-hook chpwd starship_kubectl_chpwd
-
-# Added by LM Studio CLI (lms)
-
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-source <(carapace _carapace)
-
-# toggle-theme: switch dark/light mode for wezterm + nvim
-toggle-theme() {
-  local theme_file="$HOME/.config/wezterm/theme-mode"
-  local current=$(cat "$theme_file" 2>/dev/null || echo "dark")
-  if [[ "$current" == "dark" ]]; then
-    echo "light" > "$theme_file"
-    echo "☀️  Light mode"
-  else
-    echo "dark" > "$theme_file"
-    echo "🌙 Dark mode"
-  fi
-  # Touch wezterm config to trigger auto-reload
-  touch "$HOME/.config/wezterm/wezterm.lua"
-}
-
-# zoxide init
-eval "$(zoxide init zsh)"
-
-# mcfly — smart history search (Ctrl+R)
-export MCFLY_RESULTS=60
-eval "$(mcfly init zsh)"
-
-# Claude session tracker — captures session ID on exit for easy resume
-claude() {
-  command claude "$@"
-  local rc=$?
-
-  local proj_dir="$HOME/.claude/projects/$(pwd | sed 's|/|-|g')"
-  [[ -d "$proj_dir" ]] || return $rc
-
-  # Collect session IDs of still-running Claude processes
-  local -A active=()
-  for sf in ~/.claude/sessions/*.json(N); do
-    local pid=${sf:t:r}
-    if kill -0 "$pid" 2>/dev/null; then
-      local sid=$(grep -o '[0-9a-f]\{8\}-[0-9a-f]\{4\}-[0-9a-f]\{4\}-[0-9a-f]\{4\}-[0-9a-f]\{12\}' "$sf" 2>/dev/null)
-      [[ -n "$sid" ]] && active[$sid]=1
-    fi
-  done
-
-  # Most recently modified .jsonl NOT from an active session = just exited
-  for jf in "$proj_dir"/*.jsonl(NOm); do
-    local sid=${jf:t:r}
-    if [[ -z "${active[$sid]+x}" ]]; then
-      echo "$sid" > "/tmp/.claude-session-$$"
-      break
-    fi
-  done
-
-  return $rc
-}
-
-# cr: resume Claude session (last from this dir, by ID, or picker)
-cr() {
-  if [[ -n "$1" ]]; then
-    claude --resume "$1"
-    return
-  fi
-  local project_dir="$HOME/.claude/projects/$(pwd | tr '/' '-')"
-  local latest
-  latest=$(ls -t "$project_dir"/*.jsonl 2>/dev/null | head -1)
-  if [[ -n "$latest" ]]; then
-    claude --resume "$(basename "$latest" .jsonl)"
-  else
-    claude --resume
-  fi
-}
-
-# ─── YAZI ────────────────────────────────────────────────────────────
-# Wrapper: 'y' opens yazi and cd's to the last directory on quit (q)
-function y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+command -v starship >/dev/null && eval "$(starship init zsh)"
+command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+command -v mcfly >/dev/null && eval "$(mcfly init zsh)"
+if command -v carapace >/dev/null; then
+  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+  source <(carapace _carapace)
+fi
+y() {
+  local tmp="$(mktemp -t yazi-cwd.XXXXXX)" cwd
   yazi "$@" --cwd-file="$tmp"
-  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+  if cwd="$(command cat -- "$tmp")" && [[ -n "$cwd" && "$cwd" != "$PWD" ]]; then
     builtin cd -- "$cwd"
   fi
   rm -f -- "$tmp"
 }
-
-# ─── Machine-specific config (not tracked by chezmoi) ────────────
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
-
-# Fuzzy find file and open in vim (with preview)
-vf() { local f=$(fzf --preview 'bat --color=always {} 2>/dev/null || cat {}'); [ -n "$f" ] && vim "$f"; }
-
-# ─── Chezmoi ─────────────────────────────────────────────────────────
-# Sync home → source state, commit, push in one shot
-# Usage: chezsync "optional commit message"
-chezsync() {
-  chezmoi re-add && \
-  chezmoi git add -- -A && \
-  chezmoi git commit -- -m "${1:-update dotfiles}"
-  chezmoi git push
+toggle-theme() {
+  local theme_file="$HOME/.config/wezterm/theme-mode"
+  local current=$(cat "$theme_file" 2>/dev/null || echo dark)
+  mkdir -p "${theme_file:h}"
+  if [[ "$current" == dark ]]; then echo light > "$theme_file"; else echo dark > "$theme_file"; fi
+  [[ -f "$HOME/.config/wezterm/wezterm.lua" ]] && touch "$HOME/.config/wezterm/wezterm.lua"
 }
-
-# Beads mission memory database
-export BEADS_DIR="$HOME/.missions/.beads"
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/t026chirv/.lmstudio/bin"
-# End of LM Studio CLI section
-
-
-# Rust / cargo (installed via rustup)
-. "$HOME/.cargo/env"
+# Keep credentials and machine-specific settings outside chezmoi.
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

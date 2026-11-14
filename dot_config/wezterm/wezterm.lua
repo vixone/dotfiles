@@ -169,8 +169,18 @@ config.inactive_pane_hsb = {
 	brightness = 0.6,
 }
 
+-- Ctrl+. always sends Alt+. (ESC .): Herdr 0.8.2 drops Ctrl from Ctrl+., and Pi binds both to
+-- jump-to-latest (~/.pi/agent/keybindings.json). A process check is unreliable: herdr tabs report /bin/bash.
+local function ctrl_period(_, pane)
+	pane:send_text("\x1b.")
+end
+
 -- ─── KEYBINDINGS ───────────────────────────────────────────────────
 config.keys = {
+	-- ─── CTRL+. INTO HERDR ───────────────────────────────────────────
+	-- phys:Period is the one that matches on the custom keyboard; "." is kept for others.
+	{ key = ".", mods = "CTRL", action = wezterm.action_callback(function(w, p) ctrl_period(w, p) end) },
+	{ key = "phys:Period", mods = "CTRL", action = wezterm.action_callback(function(w, p) ctrl_period(w, p) end) },
 	-- ─── TAB MANAGEMENT ──────────────────────────────────────────────
 	-- New tab (cmd+t)
 	{

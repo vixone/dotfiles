@@ -1,0 +1,66 @@
+{
+ "rows": [
+  {
+   "issue_id": "mission-aaaa.1",
+   "depends_on_issue_id": "mission-aaaa",
+   "type": "parent-child",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-aaaa.2",
+   "depends_on_issue_id": "mission-aaaa",
+   "type": "parent-child",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-bbbb.1",
+   "depends_on_issue_id": "mission-aaaa",
+   "type": "parent-child",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-aaaa.2",
+   "depends_on_issue_id": "mission-aaaa.1",
+   "type": "blocks",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-cccc",
+   "depends_on_issue_id": "mission-bbbb",
+   "type": "related",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-cccc",
+   "depends_on_issue_id": "mission-aaaa",
+   "type": "relates-to",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-bbbb",
+   "depends_on_issue_id": "mission-aaaa",
+   "type": "discovered-from",
+   "created_at": "2026-01-06 00:00:00",
+   "created_by": "jdoe",
+   "metadata": {}
+  },
+  {
+   "issue_id": "mission-cccc",
+   "depends_on_external": "external:x:y",
+   "type": "blocks",
+   "created_at": "2026-01-06 00:00:00"
+  }
+ ]
+}

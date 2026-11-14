@@ -1,0 +1,15 @@
+{
+  "contract_version": "memory-v1",
+  "command": "search",
+  "model": "bge-base-en-v1.5",
+  "embed_dims": 768,
+  "schema_version": "2",
+  "sync_status": "complete",
+  "query": "eks node taint rollout",
+  "hits": [
+    { "type": "lesson", "key": "eks-nodegroup-taint-rollout", "domain": "eks", "score": 0.9123, "excerpt": "Roll node taints in waves; a single-shot taint evicts everything.", "provenance": "bd:lesson" },
+    { "type": "lesson", "key": "memory-sync-coverage-closed-epics", "domain": "memory", "score": 0.8611, "excerpt": "Enumerate epics with --all or closed missions never index.", "provenance": "bd:lesson" },
+    { "type": "mission_child", "key": "mission-l4w.27", "mission_id": "mission-l4w", "kind": "finding", "status": "closed", "score": 0.9611, "excerpt": "Symptom: index missing 83 of 104 epics.", "provenance": "bd:child" }
+  ],
+  "error": null
+}

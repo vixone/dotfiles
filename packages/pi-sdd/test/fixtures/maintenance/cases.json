@@ -1,0 +1,8 @@
+[
+  {"skill":"brainstorm","request":"cancel design review","approval":false,"expectedWrites":0},
+  {"skill":"analyze","request":"read-only analysis preview","approval":false,"expectedWrites":0},
+  {"skill":"document","request":"audit documentation","approval":false,"expectedWrites":0},
+  {"skill":"debug","request":"diagnose in bound epic","binding":"mission-fixture","diagnosisApproved":true,"fixApproved":false,"expectedEpicCreates":0,"expectedWrites":0},
+  {"skill":"refactor","request":"extract calculation","approval":true,"allowedFiles":["calculate.mjs"],"expectedOutput":12},
+  {"skill":"document","request":"propose global lesson","dedupAvailable":false,"approval":true,"expectedRemembers":0}
+]

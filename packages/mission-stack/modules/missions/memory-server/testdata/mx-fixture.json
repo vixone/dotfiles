@@ -1,0 +1,130 @@
+{
+ "issues": [
+  {
+   "id": "mission-927",
+   "issue_type": "epic",
+   "title": "Unify personal mission and memory stack",
+   "status": "open"
+  },
+  {
+   "id": "mission-abc",
+   "issue_type": "epic",
+   "title": "Active example epic",
+   "status": "in_progress"
+  },
+  {
+   "id": "mission-l4w",
+   "issue_type": "epic",
+   "title": "Mission stack roadmap execution",
+   "status": "closed"
+  },
+  {
+   "id": "mission-oij",
+   "issue_type": "epic",
+   "title": "Agent Memory PoC — graph quality, coverage & next-level data sources",
+   "status": "closed"
+  },
+  {
+   "id": "mission-abc.1",
+   "parent": "",
+   "issue_type": "task",
+   "status": "open",
+   "title": "orphan task with no epic parent (must be excluded)",
+   "description": "This task has no parent, so it is not a child of any mission."
+  },
+  {
+   "id": "mission-l4w.27",
+   "parent": "mission-l4w",
+   "issue_type": "finding",
+   "status": "closed",
+   "title": "[finding] Sync misses closed epics",
+   "description": "Symptom: index missing 83 of 104 epics. Cause: bd list called without --all/--type epic. Body carries the real evidence, not the title.",
+   "labels": [
+    "finding",
+    "memory"
+   ]
+  },
+  {
+   "id": "mission-l4w.32",
+   "parent": "mission-l4w",
+   "issue_type": "decision",
+   "status": "closed",
+   "title": "[decision] Incremental indexing replaces full sync on /land",
+   "description": "Decision: incremental sync on land; full sync only for repair. Rationale lives in the description body, which the title omits entirely.",
+   "labels": [
+    "decision",
+    "memory"
+   ]
+  },
+  {
+   "id": "mission-l4w.40",
+   "parent": "mission-l4w",
+   "issue_type": "action",
+   "status": "closed",
+   "title": "[action] Wire post-land indexing hook",
+   "description": "Steps: add tool_result hook; index successful bd remember by key; surface failures. Evidence and acceptance recorded in body.",
+   "labels": [
+    "action",
+    "memory"
+   ]
+  }
+ ],
+ "memories": {
+  "eks-sanitized-case-1": "eks: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "eks-sanitized-case-2": "eks: cold-start path differs from steady state; test both before claiming parity.",
+  "eks-sanitized-case-3": "eks: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "eks-sanitized-case-4": "eks: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "terraform-sanitized-case-1": "terraform: prefer the documented flag over guessing; verify against live state before acting.",
+  "terraform-sanitized-case-2": "terraform: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "terraform-sanitized-case-3": "terraform: cold-start path differs from steady state; test both before claiming parity.",
+  "terraform-sanitized-case-4": "terraform: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "tf-sanitized-case-1": "tf: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "tf-sanitized-case-2": "tf: prefer the documented flag over guessing; verify against live state before acting.",
+  "tf-sanitized-case-3": "tf: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "tf-sanitized-case-4": "tf: cold-start path differs from steady state; test both before claiming parity.",
+  "karpenter-sanitized-case-1": "karpenter: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "karpenter-sanitized-case-2": "karpenter: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "karpenter-sanitized-case-3": "karpenter: prefer the documented flag over guessing; verify against live state before acting.",
+  "karpenter-sanitized-case-4": "karpenter: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "aurora-sanitized-case-1": "aurora: cold-start path differs from steady state; test both before claiming parity.",
+  "aurora-sanitized-case-2": "aurora: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "aurora-sanitized-case-3": "aurora: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "aurora-sanitized-case-4": "aurora: prefer the documented flag over guessing; verify against live state before acting.",
+  "iam-sanitized-case-1": "iam: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "iam-sanitized-case-2": "iam: cold-start path differs from steady state; test both before claiming parity.",
+  "iam-sanitized-case-3": "iam: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "iam-sanitized-case-4": "iam: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "pi-sanitized-case-1": "pi: prefer the documented flag over guessing; verify against live state before acting.",
+  "pi-sanitized-case-2": "pi: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "pi-sanitized-case-3": "pi: cold-start path differs from steady state; test both before claiming parity.",
+  "pi-sanitized-case-4": "pi: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "git-sanitized-case-1": "git: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "git-sanitized-case-2": "git: prefer the documented flag over guessing; verify against live state before acting.",
+  "git-sanitized-case-3": "git: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "git-sanitized-case-4": "git: cold-start path differs from steady state; test both before claiming parity.",
+  "bd-sanitized-case-1": "bd: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "bd-sanitized-case-2": "bd: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "bd-sanitized-case-3": "bd: prefer the documented flag over guessing; verify against live state before acting.",
+  "bd-sanitized-case-4": "bd: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "memory-sanitized-case-1": "memory: cold-start path differs from steady state; test both before claiming parity.",
+  "memory-sanitized-case-2": "memory: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "memory-sanitized-case-3": "memory: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "memory-sanitized-case-4": "memory: prefer the documented flag over guessing; verify against live state before acting.",
+  "mq-sanitized-case-1": "mq: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "mq-sanitized-case-2": "mq: cold-start path differs from steady state; test both before claiming parity.",
+  "mq-sanitized-case-3": "mq: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "mq-sanitized-case-4": "mq: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "argocd-sanitized-case-1": "argocd: prefer the documented flag over guessing; verify against live state before acting.",
+  "argocd-sanitized-case-2": "argocd: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "argocd-sanitized-case-3": "argocd: cold-start path differs from steady state; test both before claiming parity.",
+  "argocd-sanitized-case-4": "argocd: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "acm-sanitized-case-1": "acm: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "acm-sanitized-case-2": "acm: prefer the documented flag over guessing; verify against live state before acting.",
+  "acm-sanitized-case-3": "acm: reconcile by identity and content hash, not presence alone, or deletes are missed.",
+  "acm-sanitized-case-4": "acm: cold-start path differs from steady state; test both before claiming parity.",
+  "networking-sanitized-case-1": "networking: the CLI human output is not a stable contract; parse a versioned JSON surface instead.",
+  "networking-sanitized-case-2": "networking: scope facts to an environment; same-named resources differ across test/prelive/live.",
+  "networking-sanitized-case-3": "networking: prefer the documented flag over guessing; verify against live state before acting.",
+  "networking-sanitized-case-4": "networking: reconcile by identity and content hash, not presence alone, or deletes are missed."
+ }
+}

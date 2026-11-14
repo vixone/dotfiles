@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# memory-export - Copy the memory database for backup/transfer.
+# Usage: memory-export [destination]
+#   Default destination: ./memory-<timestamp>.db
+#
+# Note on ownership: mx.db is the source of truth for lessons and mission
+# work. This sqlite-vec database is a DERIVED index (embeddings + edges) and can
+# always be rebuilt from mx.db with `memory-server --sync`. Export it only to move
+# the prebuilt index between machines and skip a re-embed.
+
+DB="${MEMORY_SQLITE_PATH:-$HOME/.pi/state/memory.db}"
+DEST="${1:-./memory-$(date +%Y%m%d-%H%M%S).db}"
+
+if [[ ! -f "$DB" ]]; then
+    echo "✗ No memory database at $DB" >&2
+    echo "  Build it first: memory-server --sync" >&2
+    exit 1
+fi
+
+# Validate the source is a coherent index before exporting.
+if command -v sqlite3 >/dev/null 2>&1; then
+    if ! sqlite3 "$DB" "SELECT 1 FROM lessons LIMIT 1;" >/dev/null 2>&1; then
+        echo "✗ $DB has no lessons table - not a valid memory index." >&2
+        exit 1
+    fi
+fi
+
+cp "$DB" "$DEST"
+SIZE=$(du -h "$DEST" | cut -f1)
+LESSONS=$(sqlite3 "$DEST" "SELECT COUNT(*) FROM lessons" 2>/dev/null || echo "?")
+CHILDREN=$(sqlite3 "$DEST" "SELECT COUNT(*) FROM mission_children" 2>/dev/null || echo "?")
+SCHEMA=$(sqlite3 "$DEST" "SELECT value FROM meta WHERE key='schema_version'" 2>/dev/null || echo "?")
+
+echo "✓ Exported memory index"
+echo "  Source: $DB"
+echo "  Destination: $DEST ($SIZE)"
+echo "  Contents: $LESSONS lessons, $CHILDREN mission children (schema v$SCHEMA)"

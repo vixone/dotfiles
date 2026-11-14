@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@openrig/cli": "^0.7.7"
+  }
+}

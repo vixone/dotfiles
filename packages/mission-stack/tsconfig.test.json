@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@earendil-works/pi-coding-agent": ["./tests/stubs/pi-runtime.ts"] }
+  }
+}

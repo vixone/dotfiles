@@ -1,0 +1,14 @@
+{
+  "schema": "contracts-snapshot-v1",
+  "purpose": "Records the UNIFIED retrieval/duplicate contract after mission-927.8. All three surfaces reference one calibrated tier set and the memory-v1 JSON contract; the write gate consumes the server verdict rather than a separate threshold.",
+  "duplicate_tiers": {
+    "canonical": { "merge": 0.96, "likely": 0.93, "related": 0.9, "embedding": "passage", "source": "memory-server Dup* consts + memory-contract.ts DUP_TIERS" },
+    "advertised_in_tool_description": { "merge": 0.96, "likely": 0.93, "related": 0.9 },
+    "write_gate": { "blocks_on": ["merge", "likely"], "source": "remember-gate.ts consumes DupResult.verdict from --json" }
+  },
+  "search_filters": {
+    "advertised_params": ["query", "domain", "type_filter"],
+    "forwarded_to_binary": ["query", "domain", "type_filter"],
+    "source": "memory-client.ts search/searchStructured forward --domain/--type; server filters over a widened pool"
+  }
+}

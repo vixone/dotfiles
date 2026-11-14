@@ -1,0 +1,58 @@
+[
+  {
+    "name": "classifier-direct",
+    "brief": "Fix the off-by-one remaining-quota header on window reset.",
+    "requirements": "AC-1: After reset, remaining quota reflects the new window minus the current request. Change type: fix.",
+    "solution": "Reorder existing src/middleware/rate-limit.ts logic. No new components.",
+    "signals": { "changeType": "fix", "featureCount": 0, "acCount": 1, "componentCount": 0, "parallelMarkers": false, "existingSurfaceOnly": true },
+    "expectedTier": "direct"
+  },
+  {
+    "name": "classifier-incremental",
+    "brief": "Add a notification publishing API with durable idempotent delivery.",
+    "requirements": "F1: publish notifications. AC-1: POST returns 202 and id. AC-2: invalid payload returns 422. AC-3: webhook retries five times. AC-4: idempotency key dedupes. AC-5: failed delivery is visible via GET.",
+    "solution": "Two components: Notifications API and Notifications Repository. PostgreSQL persistence and an in-process delivery worker.",
+    "signals": { "changeType": "feature", "featureCount": 1, "acCount": 5, "componentCount": 2, "parallelMarkers": false, "existingSurfaceOnly": false },
+    "expectedTier": "incremental"
+  },
+  {
+    "name": "classifier-factory",
+    "brief": "Add an authentication platform.",
+    "requirements": "Three capabilities: email/password authentication, refresh-token session management, and password reset. Eight acceptance criteria cover login, refresh, forgot, reset, lockout, audit, MFA prompt, and revocation.",
+    "solution": "Auth Controller, Session Service, Password Service, and Email Service. Token and email work can proceed independently.",
+    "signals": { "changeType": "feature", "featureCount": 3, "acCount": 8, "componentCount": 4, "parallelMarkers": true, "existingSurfaceOnly": false },
+    "expectedTier": "factory"
+  },
+  {
+    "name": "spec-with-both",
+    "brief": "Validate SQL before execution with structured responses and rate limiting.",
+    "requirements": "Syntax validation, injection rejection, reference extraction, structured response, complexity scoring, and rate limiting. Acceptance covers valid, injection, empty, and rate-limited requests.",
+    "solution": "ValidationController, SQLParser, InjectionDetector, ComplexityScorer, RateLimiter. Existing parser dependency; application-level throttling.",
+    "signals": { "changeType": "feature", "featureCount": 2, "acCount": 4, "componentCount": 5, "parallelMarkers": false, "existingSurfaceOnly": false },
+    "expectedTier": "factory"
+  },
+  {
+    "name": "spec-missing-sdd",
+    "brief": "Add notifications, but explicitly review whether solution design can be omitted.",
+    "requirements": "F1: WebSocket push. F2: email fallback. F3: channel preferences.",
+    "solution": null,
+    "signals": { "changeType": "feature", "featureCount": 3, "acCount": 3, "componentCount": 0, "parallelMarkers": false, "existingSurfaceOnly": false },
+    "expectedTier": "factory"
+  },
+  {
+    "name": "spec-validation-gaps",
+    "brief": "Validate an incomplete health endpoint phase plan without auto-fixing it.",
+    "requirements": "AC-1: GET /health returns 200 with version. AC-2: uptime in seconds.",
+    "solution": "Health Controller exposes JSON through one new component. The phase-1 task lacks requirement section references; phase-2 exists but is unlisted in navigation. Both gaps must be reported, not treated as ready.",
+    "signals": { "changeType": "feature", "featureCount": 1, "acCount": 2, "componentCount": 1, "parallelMarkers": false, "existingSurfaceOnly": false },
+    "expectedTier": "incremental"
+  },
+  {
+    "name": "spec-single-feature",
+    "brief": "Define incremental delivery for one notification capability.",
+    "requirements": "Publish and persist notifications; deliver via webhook; support idempotent retry. Acceptance covers 202, 422, backoff, deduplication, and failed-state GET.",
+    "solution": "Notifications API and Repository, PostgreSQL with idempotency constraint, and in-process polling worker. Public schema includes ID, topic, payload, key, state, attempts, created and updated timestamps.",
+    "signals": { "changeType": "feature", "featureCount": 1, "acCount": 5, "componentCount": 2, "parallelMarkers": false, "existingSurfaceOnly": false },
+    "expectedTier": "incremental"
+  }
+]
