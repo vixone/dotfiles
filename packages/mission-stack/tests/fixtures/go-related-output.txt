@@ -1,0 +1,8 @@
+## 🗺️ Related Missions
+
+### [mission-l4w] Mission stack roadmap execution _closed_
+  - [0.96] mission-l4w.27: Symptom: index missing 83 of 104 epics. Cause: bd list without --all.
+  - [0.90] mission-l4w.32: Incremental indexing replaces full sync on /land.
+
+### [mission-oij] Agent Memory PoC _closed_
+  - [0.88] mission-oij.14: Rebuilt the knowledge graph as a semantic index over bd missions.

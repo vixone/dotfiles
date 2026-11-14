@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "environment-v1",
+  "title": "Environment record frontmatter (environment-v1)",
+  "description": "Frontmatter contract for knowledge/environment/*.md. Facts only, no executable commands in metadata, no credentials. The Markdown body holds the concise prose; metadata is for identity, scoping, provenance and relations. Enforced by extensions/mission-stack/environment-source.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "sources", "verified_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Stable unique record id. Must be unique across all records."
+    },
+    "title": { "type": "string", "minLength": 3 },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+      "uniqueItems": true,
+      "description": "Alternate lookup keys resolved before lexical/semantic fallback."
+    },
+    "scopes": {
+      "type": "array",
+      "description": "Distinct applicable environments/paths within one record (e.g. workstation vs eks-workload). Keeps same-named facts in different environments separate.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "summary"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "aliases": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
+            "uniqueItems": true
+          },
+          "summary": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 3 },
+      "description": "Where each fact was verified from (referenced, not copied). AWS inventory stays a reference, never a copied account list."
+    },
+    "verified_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "ISO date the facts were last verified. Drives freshness warnings."
+    },
+    "relations": {
+      "type": "array",
+      "description": "Typed links to other records. Targets must resolve to an existing record id (no dangling references).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "target"],
+        "properties": {
+          "type": { "type": "string", "enum": ["relates-to", "supersedes", "depends-on"] },
+          "target": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
+        }
+      }
+    }
+  }
+}

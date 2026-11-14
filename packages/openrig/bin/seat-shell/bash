@@ -1,0 +1,23 @@
+#!/bin/bash
+# SHELL for a locked seat's interactive shells, such as powerline bash-mode. Runs /bin/bash under the seat's
+# Seatbelt profile with the seat sandbox env, the same as the bash tool: scratch HOME, no operator
+# credentials or localhost access. The rig extension writes profile.sb and env into
+# <seat agent dir>/shell, which the sandbox can neither read nor write, and exports DEVRIG_SEAT_SHELL_DIR.
+# Named bash so callers pick bash syntax. Not on the seat PATH.
+set -euo pipefail
+dir=${DEVRIG_SEAT_SHELL_DIR:-}
+case "$dir" in
+  */../* | */./* | *[!A-Za-z0-9/._@-]*) echo "[devrig-seat-shell] refused: bad DEVRIG_SEAT_SHELL_DIR" >&2; exit 2 ;;
+  /*/.devrig/*/agent/shell) ;;
+  *) echo "[devrig-seat-shell] refused: DEVRIG_SEAT_SHELL_DIR is not a seat shell dir" >&2; exit 2 ;;
+esac
+[ -f "$dir/profile.sb" ] && [ -f "$dir/env" ] || { echo "[devrig-seat-shell] refused: seat shell files missing" >&2; exit 2; }
+envs=()
+while IFS= read -r kv || [ -n "$kv" ]; do
+  case "$kv" in
+    [A-Z_]*=*) envs+=("$kv") ;;
+    *) echo "[devrig-seat-shell] refused: bad env line" >&2; exit 2 ;;
+  esac
+done < "$dir/env"
+[ "${#envs[@]}" -gt 0 ] || { echo "[devrig-seat-shell] refused: empty env" >&2; exit 2; }
+exec /usr/bin/env -i "${envs[@]}" SHELL=/bin/bash /usr/bin/sandbox-exec -f "$dir/profile.sb" /bin/bash "$@"

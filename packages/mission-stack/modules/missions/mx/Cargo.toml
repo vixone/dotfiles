@@ -1,0 +1,32 @@
+[package]
+name = "mx"
+version = "0.1.0"
+edition = "2021"
+description = "Mission store: a bd-compatible CLI over one SQLite file"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "mx"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+clap = { version = "4", features = ["derive"] }
+rand = "0.8"
+regex = "1"
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

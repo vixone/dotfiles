@@ -20,8 +20,11 @@ return {
   },
 
   -- navigate lsp suggest with tab
+  -- Pin to 1.x: main is unreleased v2 and needs saghen/blink.lib.
+  -- LazyVim extra is still v1; version='*' would jump to v2 when tagged.
   {
     "saghen/blink.cmp",
+    version = "1.*",
     opts = {
       keymap = {
         preset = "default",

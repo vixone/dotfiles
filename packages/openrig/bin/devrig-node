@@ -1,0 +1,6 @@
+#!/bin/sh
+# Runs the rig's private Node 22 (strips TypeScript types natively).
+set -eu
+self=$(/usr/bin/readlink -f "$0")
+root=$(cd "$(dirname "$self")/.." && pwd -P)
+exec "$root/.runtime/node/node_modules/node/bin/node" "$@"

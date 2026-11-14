@@ -1,0 +1,16 @@
+{
+ "rows": [
+  {
+   "key": "auto-export",
+   "value": "false"
+  },
+  {
+   "key": "kv.memory.lesson-one",
+   "value": "text one"
+  },
+  {
+   "key": "kv.memory.Mixed Key",
+   "value": "x"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+**/node_modules/
+**/target/
+**/.DS_Store
+**/.env
+**/.env.*
+**/*.log
+**/*.sqlite
+**/*.sqlite-*
+**/*.db
+**/*.db-*
+**/auth.json

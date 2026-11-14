@@ -1,15 +1,14 @@
-# Repo-only files — not applied to home directory
+# Repository software and documentation are not home-directory dotfiles.
 Brewfile
 README.md
 LICENSE
 docs/
 skills/
-mission-memory-wiki/
-
-# Obsidian daily notes content (machine-specific, not portable)
+packages/
+bootstrap.sh
+.gitignore
+# Machine-specific note content is not portable.
 obsidian-notes/daily-notes
-
-# IDE and tool artifacts — should never be tracked
 **/.DS_Store
 **/.claude
 **/.start

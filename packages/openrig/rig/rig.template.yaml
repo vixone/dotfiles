@@ -1,0 +1,56 @@
+# Rendered by `bin/devrig provision` into ~/.devrig/rig.yaml. @@ROOT@@ is this repo,
+# @@STATE@@ is ~/.devrig. Do not launch this template directly.
+version: "0.2"
+name: devrig
+summary: >
+  Personal coding team on Pi. The lead plans work and reviews results.
+  Two sandboxed experts edit and test code in configured worktrees.
+
+env:
+  HOME: "@@STATE@@/daemon-home"
+  ZDOTDIR: "@@ROOT@@/shell"
+  PATH: "@@ROOT@@/bin/seat:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+# Configure a default provider and model with /login and /model in your own Pi first.
+# No model IDs ship here. Locked seats copy only the selected provider's config and login.
+# Model overrides must use that same provider. See README.md for setup and limits.
+pods:
+  - id: dev
+    label: Coding
+    members:
+      - id: lead
+        label: Lead
+        agent_ref: "path:@@ROOT@@/agents/coder"
+        profile: default
+        runtime: pi-tui
+        cwd: "@@ROOT@@/workspace"
+        restore_policy: resume_if_possible
+        compaction_strategy: default-compaction
+      - id: expert1
+        label: Expert 1
+        agent_ref: "path:@@ROOT@@/agents/coder"
+        profile: default
+        runtime: pi-tui
+        cwd: "@@ROOT@@/workspace"
+        restore_policy: resume_if_possible
+        compaction_strategy: default-compaction
+      - id: expert2
+        label: Expert 2
+        agent_ref: "path:@@ROOT@@/agents/coder"
+        profile: default
+        runtime: pi-tui
+        cwd: "@@ROOT@@/workspace"
+        restore_policy: resume_if_possible
+        compaction_strategy: default-compaction
+    edges:
+      - kind: delegates_to
+        from: lead
+        to: expert1
+      - kind: delegates_to
+        from: lead
+        to: expert2
+      - kind: collaborates_with
+        from: expert1
+        to: expert2
+
+edges: []

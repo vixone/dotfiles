@@ -1,0 +1,28 @@
+# Herdr config for the rig's own Herdr server (bin/devrig herdr). Your ~/.config/herdr is not used.
+onboarding = false
+
+[ui]
+sidebar_start_collapsed = true
+agent_panel_sort = "spaces"
+
+[ui.toast]
+# In-app toasts. The lead's operator alert (src/operator-alert.ts) shows one, with the request sound, when it
+# waits on an operator-only approval or an open question. Seat tiles report no agent state otherwise.
+delivery = "herdr"
+
+[keys]
+# prefix+b flips between workspaces; the sidebar toggle moves to prefix+shift+b.
+next_workspace = "prefix+b"
+toggle_sidebar = "prefix+shift+b"
+workspace_picker = "prefix+u"
+zoom = "prefix+y"
+navigate_pane_left = "h"
+navigate_pane_down = "j"
+navigate_pane_up = "k"
+navigate_pane_right = "l"
+settings = ""
+edit_scrollback = "prefix+shift+e"
+focus_pane_up = "prefix+e"
+focus_pane_left = "prefix+s"
+focus_pane_down = "prefix+d"
+focus_pane_right = "prefix+f"

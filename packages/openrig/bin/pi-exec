@@ -1,0 +1,34 @@
+#!/bin/sh
+# Execs the real Pi with only the rig extension, the seat role's tools, the shared prompts and the role prompt. Shared by the headless
+# seat launcher (bin/seat/pi) and the TUI seat launcher (bin/seat/openrig-pi-tui-launch). Not on the seat PATH.
+# A TUI seat whose role has `ui` appends explicit -e/--skill/--theme paths (policy.seatUi); the --no-* flags here still
+# stop every discovered or configured resource.
+#   pi-exec <seat session name> <tool list> <role prompt> <real pi> [pi args...]
+# DEVRIG_RIG_SEAT carries the seat name to the extension, which resolves the same role from policy/safety.json.
+set -eu
+self=$(/usr/bin/readlink -f "$0")
+root=$(cd "$(dirname "$self")/.." && pwd -P)
+[ "$#" -ge 4 ] || { echo "[devrig-seat] usage: pi-exec <seat> <tools> <prompt> <pi> [args...]" >&2; exit 2; }
+seat=$1
+tools=$2
+prompt=$3
+pi=$4
+shift 4
+case "$seat" in "" | *[!a-z0-9@-]*) echo "[devrig-seat] refused: bad seat name from seat.ts" >&2; exit 2 ;; esac
+case "$prompt" in *..* | *[!A-Za-z0-9/._-]*) echo "[devrig-seat] refused: bad role prompt from seat.ts" >&2; exit 2 ;; "$root"/context/*.md | "$root"/rigs/*/context/*.md) ;; *) echo "[devrig-seat] refused: role prompt outside context/" >&2; exit 2 ;; esac
+[ -f "$prompt" ] || { echo "[devrig-seat] refused: role prompt missing" >&2; exit 2; }
+case "$tools" in "" | *[!a-z0-9_,]*) echo "[devrig-seat] refused: bad tool list from seat.ts" >&2; exit 2 ;; esac
+case "$pi" in /*/.pi/agent/bin/pi) ;; *) echo "[devrig-seat] refused: bad pi path from seat.ts" >&2; exit 2 ;; esac
+
+DEVRIG_RIG_SEAT=$seat
+# Zscaler intercepts TLS; Node 22 trusts its root only from the macOS keychain. OpenRig's env allowlist drops this.
+NODE_USE_SYSTEM_CA=1
+export DEVRIG_RIG_SEAT NODE_USE_SYSTEM_CA
+exec "$pi" \
+  --no-extensions -e "$root/extension/index.ts" \
+  --no-builtin-tools --no-mcp --no-skills --no-prompt-templates --no-themes --no-context-files \
+  --tools "$tools" \
+  --append-system-prompt "$root/policy/operating-policy.md" \
+  --append-system-prompt "$root/context/coding-reference.md" \
+  --append-system-prompt "$prompt" \
+  "$@"

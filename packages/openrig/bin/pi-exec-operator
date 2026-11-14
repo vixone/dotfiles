@@ -1,0 +1,32 @@
+#!/bin/sh
+# Execs the operator's own Pi for an operator-posture seat (policy roles.<role>.posture). The seat gets the operator's
+# HOME, login shell environment and ~/.pi/agent (packages, theme, skills, real bash), plus the rig extension and the
+# role prompt. Only its conversations live in the seat dir, so OpenRig can resume them. Not on the seat PATH.
+#   pi-exec-operator <seat session name> <role prompt> <real pi> <account home> <sessions dir> [pi args...]
+set -eu
+self=$(/usr/bin/readlink -f "$0")
+root=$(cd "$(dirname "$self")/.." && pwd -P)
+[ "$#" -ge 5 ] || { echo "[devrig-seat] usage: pi-exec-operator <seat> <prompt> <pi> <home> <sessions> [args...]" >&2; exit 2; }
+seat=$1
+prompt=$2
+pi=$3
+home=$4
+sessions=$5
+shift 5
+case "$seat" in "" | *[!a-z0-9@-]*) echo "[devrig-seat] refused: bad seat name from seat.ts" >&2; exit 2 ;; esac
+case "$prompt" in *..* | *[!A-Za-z0-9/._-]*) echo "[devrig-seat] refused: bad role prompt from seat.ts" >&2; exit 2 ;; "$root"/context/*.md | "$root"/rigs/*/context/*.md) ;; *) echo "[devrig-seat] refused: role prompt outside context/" >&2; exit 2 ;; esac
+[ -f "$prompt" ] || { echo "[devrig-seat] refused: role prompt missing" >&2; exit 2; }
+case "$home" in /* ) ;; *) echo "[devrig-seat] refused: bad home from seat.ts" >&2; exit 2 ;; esac
+case "$home" in *..* | *[!A-Za-z0-9/._-]*) echo "[devrig-seat] refused: bad home from seat.ts" >&2; exit 2 ;; esac
+[ "$pi" = "$home/.pi/agent/bin/pi" ] || { echo "[devrig-seat] refused: bad pi path from seat.ts" >&2; exit 2; }
+[ "$sessions" = "$home/.devrig/openrig-home/state/pi-tui/$seat/sessions" ] || { echo "[devrig-seat] refused: bad sessions dir from seat.ts" >&2; exit 2; }
+
+# The daemon's private HOME, zsh dir, tmux dir and seat agent dir must not leak into the operator's Pi.
+# OPENRIG_* stay: the rig extension reads its seat name and the daemon URL from them.
+exec /usr/bin/env -u ZDOTDIR -u PI_CODING_AGENT_DIR -u TMUX_TMPDIR -u DEVRIG_RIG_PATH \
+  HOME="$home" SHELL=/bin/zsh \
+  PI_CODING_AGENT_SESSION_DIR="$sessions" \
+  DEVRIG_RIG_SEAT="$seat" \
+  NODE_USE_SYSTEM_CA=1 \
+  /bin/zsh -l -i -c 'exec "$@"' devrig-seat \
+  "$pi" -e "$root/extension/index.ts" --append-system-prompt "$prompt" "$@"

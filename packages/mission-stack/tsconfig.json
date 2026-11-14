@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": [
+    "tests/**/*.ts",
+    "modules/missions/extensions/mission-stack/memory-client.ts",
+    "modules/missions/extensions/mission-stack/memory-tools.ts",
+    "modules/missions/extensions/mission-stack/memory-policy.ts",
+    "modules/missions/extensions/mission-stack/remember-gate.ts",
+    "modules/missions/extensions/mission-stack/first-contact.ts",
+    "modules/missions/extensions/mission-stack/memory-contract.ts",
+    "modules/missions/extensions/mission-stack/memory-guard.ts",
+    "modules/missions/extensions/mission-stack/environment-source.ts",
+    "modules/missions/extensions/mission-stack/mission-resume.ts",
+    "modules/missions/extensions/mission-stack/next.ts",
+    "modules/missions/extensions/mission-stack/context-coordinator.ts",
+    "modules/missions/extensions/mission-stack/stack-config.ts",
+    "modules/missions/extensions/mission-stack/knowledge-capture.ts",
+    "modules/missions/extensions/mission-stack/knowledge-status.ts",
+    "modules/missions/extensions/mission-workflow/index.ts",
+    "modules/missions/lib/*.ts",
+    "modules/sessions/extensions/sidebar/*.ts",
+    "modules/guards/extensions/guards/*.ts",
+    "modules/harness/extensions/context-budget/*.ts",
+    "modules/bar/extensions/pi-bar/*.ts"
+  ]
+}

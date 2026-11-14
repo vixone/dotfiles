@@ -1,0 +1,15 @@
+## 📚 Related Lessons
+
+- **[0.91]** `eks-nodegroup-taint-rollout` (eks)
+  Roll node taints in waves; a single-shot taint evicts everything and stalls the cluster.
+
+- **[0.86]** `memory-sync-coverage-closed-epics` (memory)
+  Enumerate epics with --all --type epic or closed missions never make it into the index.
+
+## 📋 Related Mission Work
+
+- **[0.96]** [mission-l4w] mission-l4w.27
+  Symptom: index missing 83 of 104 epics. Cause: bd list called without --all/--type epic.
+
+- **[0.88]** [mission-oij] mission-oij.14
+  Rebuilt the knowledge graph as a semantic index over bd missions and lessons.

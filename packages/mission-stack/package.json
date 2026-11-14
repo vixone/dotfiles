@@ -1,0 +1,44 @@
+{
+  "name": "mission-stack",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal Pi package: missions, semantic memory, workflow skills, guards and session extensions. Loaded from this checkout.",
+  "keywords": [
+    "pi-package"
+  ],
+  "pi": {
+    "extensions": [
+      "./modules/*/extensions/*/index.ts"
+    ],
+    "skills": [
+      "./modules/*/skills"
+    ],
+    "prompts": [
+      "./modules/*/prompts/*.md"
+    ]
+  },
+  "scripts": {
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "verify:land": "node scripts/verify-land-runtime.mjs",
+    "test:go": "cd modules/missions/memory-server && go test -tags sqlite_fts5 ./...",
+    "test:modules": "node --experimental-strip-types modules/guards/extensions/guards/test.ts && node --experimental-strip-types modules/harness/extensions/context-budget/test.ts && node --experimental-strip-types modules/bar/extensions/pi-bar/test.ts && node --test modules/sessions/test/"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "^1.4.0",
+    "@earendil-works/pi-coding-agent": "^1.4.0",
+    "@earendil-works/pi-tui": "^1.4.0",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typebox": "^1.4.3",
+    "typescript": "^7.0.2",
+    "undici": "^8.12.3"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  }
+}

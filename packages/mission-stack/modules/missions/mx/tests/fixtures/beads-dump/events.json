@@ -1,0 +1,63 @@
+{
+ "rows": [
+  {
+   "id": "e2026-01-01 10:00:00",
+   "issue_id": "mission-aaaa",
+   "event_type": "created",
+   "actor": "jdoe",
+   "created_at": "2026-01-01 10:00:00"
+  },
+  {
+   "id": "e2026-01-01 10:30:00",
+   "issue_id": "mission-aaaa",
+   "event_type": "updated",
+   "actor": "jdoe",
+   "created_at": "2026-01-01 10:30:00",
+   "old_value": "{\"id\": \"mission-aaaa\", \"title\": \"Old title\", \"notes\": \"n1\", \"status\": \"open\"}",
+   "new_value": "{\"notes\": \"n1\\nn2\"}"
+  },
+  {
+   "id": "e2026-01-01 10:31:00",
+   "issue_id": "mission-aaaa",
+   "event_type": "updated",
+   "actor": "jdoe",
+   "created_at": "2026-01-01 10:31:00",
+   "old_value": "{\"id\": \"mission-aaaa\", \"title\": \"Old title\", \"notes\": \"n1\", \"status\": \"open\"}",
+   "new_value": "{\"title\": \"Alpha\", \"priority\": 1}"
+  },
+  {
+   "id": "e2026-01-01 12:00:00",
+   "issue_id": "mission-aaaa.1",
+   "event_type": "closed",
+   "actor": "jdoe",
+   "created_at": "2026-01-01 12:00:00",
+   "new_value": "Done"
+  },
+  {
+   "id": "e2026-01-01 10:01:01",
+   "issue_id": "mission-aaaa.1",
+   "event_type": "label_added",
+   "actor": "jdoe",
+   "created_at": "2026-01-01 10:01:01",
+   "comment": "Added label: finding"
+  },
+  {
+   "id": "e2026-01-01 10:05:00",
+   "issue_id": "mission-aaaa.2",
+   "event_type": "claimed",
+   "actor": "jdoe",
+   "created_at": "2026-01-01 10:05:00",
+   "old_value": "{\"id\": \"mission-aaaa.2\", \"status\": \"open\"}",
+   "new_value": "{\"assignee\": \"jdoe\", \"status\": \"in_progress\"}"
+  },
+  {
+   "id": "e2026-01-05 09:01:00",
+   "issue_id": "mission-cccc",
+   "event_type": "status_changed",
+   "actor": "jdoe",
+   "created_at": "2026-01-05 09:01:00",
+   "old_value": "{\"id\": \"mission-cccc\", \"status\": \"open\", \"notes\": \"big\"}",
+   "new_value": "{\"status\": \"deferred\"}"
+  }
+ ]
+}

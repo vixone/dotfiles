@@ -1,0 +1,75 @@
+{
+ "rows": [
+  {
+   "id": "mission-aaaa",
+   "title": "Alpha",
+   "description": "desc",
+   "design": "",
+   "acceptance_criteria": "",
+   "notes": "n1\nn2",
+   "status": "open",
+   "priority": 1,
+   "issue_type": "epic",
+   "assignee": "",
+   "owner": "v@example.com",
+   "created_by": "jdoe",
+   "created_at": "2026-01-01 10:00:00",
+   "updated_at": "2026-01-02 11:00:00.123456",
+   "content_hash": "x",
+   "ephemeral": 0
+  },
+  {
+   "id": "mission-aaaa.1",
+   "title": "Done child",
+   "status": "closed",
+   "priority": 2,
+   "issue_type": "task",
+   "created_by": "Jane Doe",
+   "created_at": "2026-01-01 10:01:00",
+   "updated_at": "2026-01-01 12:00:00",
+   "closed_at": "2026-01-01 12:00:00",
+   "close_reason": "Done"
+  },
+  {
+   "id": "mission-aaaa.2",
+   "title": "Open child",
+   "status": "in_progress",
+   "priority": 2,
+   "issue_type": "task",
+   "assignee": "jdoe",
+   "created_by": "jdoe",
+   "created_at": "2026-01-01 10:02:00",
+   "updated_at": "2026-01-01 10:05:00",
+   "started_at": "2026-01-01 10:05:00"
+  },
+  {
+   "id": "mission-bbbb",
+   "title": "Beta",
+   "status": "open",
+   "priority": 2,
+   "issue_type": "epic",
+   "created_by": "jdoe",
+   "created_at": "2026-01-03 09:00:00",
+   "updated_at": "2026-01-03 09:00:00"
+  },
+  {
+   "id": "mission-bbbb.1",
+   "title": "Moved child",
+   "status": "open",
+   "priority": 3,
+   "issue_type": "task",
+   "created_by": "jdoe",
+   "created_at": "2026-01-03 09:01:00",
+   "updated_at": "2026-01-04 09:00:00"
+  },
+  {
+   "id": "mission-cccc",
+   "title": "Loose",
+   "status": "deferred",
+   "issue_type": "task",
+   "created_by": "jdoe",
+   "created_at": "2026-01-05 09:00:00",
+   "updated_at": "2026-01-05 09:00:00"
+  }
+ ]
+}

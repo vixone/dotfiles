@@ -1,0 +1,17 @@
+{
+  "contract_version": "memory-v1",
+  "command": "check-dup",
+  "model": "bge-base-en-v1.5",
+  "embed_dims": 768,
+  "schema_version": "2",
+  "duplicate": {
+    "proposed_key": "eks-nodegroup-taint-waves",
+    "verdict": "merge",
+    "top_score": 0.9712,
+    "tiers": { "merge": 0.96, "likely": 0.93, "related": 0.9 },
+    "matches": [
+      { "type": "lesson", "key": "eks-nodegroup-taint-rollout", "score": 0.9712, "excerpt": "Roll node taints in waves.", "provenance": "bd:lesson", "tier": "merge" }
+    ]
+  },
+  "error": null
+}

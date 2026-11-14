@@ -3,6 +3,8 @@
 # Chezmoi re-runs this whenever the Brewfile changes.
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
 set -euo pipefail
+[[ "$(uname -s)" == Darwin ]] || exit 0
+command -v brew >/dev/null || { echo 'Install Homebrew before applying the Brewfile' >&2; exit 1; }
 
 brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
 

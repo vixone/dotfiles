@@ -1,0 +1,16 @@
+# Installed by `bin/devrig provision` as $OPENRIG_HOME/community-harnesses/pi-tui.yaml.
+# Pi's own terminal UI as a rig seat. bin/seat/openrig-pi-tui-launch is on the seat PATH.
+format: 1
+name: pi-tui
+command: openrig-pi-tui-launch
+maintainer: vixone (personal-openrig)
+limits:
+  - checked with Pi 1.5.0 and OpenRig 0.7.7 only
+  - a wake that arrives while a person types in the seat's editor submits the half-typed draft with it
+  - a send while a Pi dialog such as /settings or /model is open types into the dialog
+  - activity is read from the screen only; an idle seat reads unknown
+  - a locked seat runs only the rig extension and tools; an operator seat runs the operator's own Pi plus the rig extension
+names_conversation: true
+resume: true
+first_input: true
+passes_model: true

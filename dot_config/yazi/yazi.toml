@@ -13,8 +13,8 @@ show_symlink = true
 
 [plugin]
 prepend_fetchers = [
-	{ id = "git", url = "*",  run = "git" },
-	{ id = "git", url = "*/", run = "git" },
+	{ group = "git", url = "*",  run = "git" },
+	{ group = "git", url = "*/", run = "git" },
 ]
 
 [preview]
@@ -35,7 +35,7 @@ reveal = [
 
 [open]
 rules = [
-  { name = "*/", use = [ "edit", "open", "reveal" ] },
+  { url = "*/", use = [ "edit", "open", "reveal" ] },
 
   { mime = "text/*", use = [ "edit", "reveal" ] },
   { mime = "image/*", use = [ "open", "reveal" ] },

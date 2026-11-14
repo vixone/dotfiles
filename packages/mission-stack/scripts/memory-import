@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# memory-import - Restore/activate a memory index from a backup file.
+# Usage: memory-import <source.db>
+#
+# The imported file is VALIDATED before it is activated (integrity + expected
+# tables + schema version). The current index is backed up first so a bad
+# import can be undone. mx remains the source of truth: if you have no backup,
+# just rebuild with `memory-server --sync` instead of importing.
+
+DB="${MEMORY_SQLITE_PATH:-$HOME/.pi/state/memory.db}"
+EXPECTED_SCHEMA="2"
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: memory-import <source.db>" >&2
+    echo "" >&2
+    echo "Or rebuild from mx (no backup needed):" >&2
+    echo "  memory-server --sync" >&2
+    exit 1
+fi
+
+SRC="$1"
+if [[ ! -f "$SRC" ]]; then
+    echo "✗ Source file not found: $SRC" >&2
+    exit 1
+fi
+
+# --- Validate BEFORE activating. -------------------------------------------
+if command -v sqlite3 >/dev/null 2>&1; then
+    if ! sqlite3 "$SRC" "PRAGMA integrity_check;" 2>/dev/null | grep -q '^ok$'; then
+        echo "✗ $SRC failed sqlite integrity_check - refusing to activate." >&2
+        exit 1
+    fi
+    if ! sqlite3 "$SRC" "SELECT 1 FROM lessons LIMIT 1;" >/dev/null 2>&1; then
+        echo "✗ $SRC has no lessons table - not a valid memory index." >&2
+        exit 1
+    fi
+    SCHEMA=$(sqlite3 "$SRC" "SELECT value FROM meta WHERE key='schema_version'" 2>/dev/null || echo "")
+    if [[ -n "$SCHEMA" && "$SCHEMA" != "$EXPECTED_SCHEMA" ]]; then
+        echo "✗ $SRC index schema v$SCHEMA != expected v$EXPECTED_SCHEMA - rebuild with memory-server --sync." >&2
+        exit 1
+    fi
+else
+    echo "  (sqlite3 not found; skipping pre-activation validation)" >&2
+fi
+
+# --- Back up the current index for rollback. -------------------------------
+if [[ -f "$DB" ]]; then
+    BAK="${DB}.bak.$(date +%Y%m%d%H%M%S)"
+    cp "$DB" "$BAK"
+    echo "  Backed up current index → $BAK"
+fi
+
+mkdir -p "$(dirname "$DB")"
+cp "$SRC" "$DB"
+
+SIZE=$(du -h "$DB" | cut -f1)
+LESSONS=$(sqlite3 "$DB" "SELECT COUNT(*) FROM lessons" 2>/dev/null || echo "?")
+echo "✓ Imported and validated memory index ($SIZE, $LESSONS lessons)"
+echo "  Active at: $DB"
